@@ -1,0 +1,112 @@
+---
+title: "Output Generation: multi-format resume and interview prep"
+sidebarTitle: "Output Generation"
+description: "Phase 4 generates your tailored resume in Markdown, DOCX, and PDF formats, plus an interview prep report. Phase 5 optionally enriches your resume library."
+---
+
+With an approved content mapping in hand, Phase 4 compiles everything into production-ready output files. The skill generates your tailored resume in up to three formats, plus a structured interview preparation report that captures the coverage analysis, gap recommendations, and cover letter guidance. Phase 5 closes the loop by offering to enrich your resume library with any newly discovered experiences — making every application a permanent investment in future applications.
+
+## Output files generated
+
+The skill produces four files, named consistently for easy organization:
+
+| File | Format | Purpose |
+|---|---|---|
+| `{Name}_{Company}_{Role}_Resume.md` | Professional Markdown | Human-readable, version-controllable, source-of-truth |
+| `{Name}_{Company}_{Role}_Resume.docx` | ATS-friendly Word document | Submission to job portals and ATS systems |
+| `{Name}_{Company}_{Role}_Resume.pdf` | Print-ready PDF | Direct submission or email attachment |
+| `{Name}_{Company}_{Role}_Resume_Report.md` | Interview prep report | Coverage metrics, gap analysis, prep guidance |
+
+**Plugin requirements:**
+- **DOCX generation** requires the `document-skills` plugin. The Word document is formatted with professional fonts (Calibri 11pt body), proper spacing, correct bullet formatting, and ATS-compatible structure.
+- **PDF generation** requires the `document-skills` plugin. The PDF is derived from the DOCX and preserves all formatting for print or direct submission.
+
+---
+
+## The interview prep report
+
+The report file is as important as the resume itself. It documents the full context of the application so you can walk into an interview knowing exactly how your resume was built and where its edges are.
+
+The report includes:
+
+**JD coverage percentage and breakdown**
+The overall percentage of job description requirements addressed, broken down by match type (Direct / Transferable / Adjacent / Gap).
+
+**Direct, Transferable, and Adjacent match breakdown**
+A bullet-by-bullet accounting of which library experience fills each template slot, at what confidence level, and what reframing (if any) was applied.
+
+**Remaining gaps and recommended talking points**
+Any unaddressed requirements are listed explicitly, with recommended talking points for addressing them verbally in interviews — the gaps aren't hidden, they're turned into prep material.
+
+**Cover letter recommendations**
+Specific guidance on which gaps or framing choices to address in a cover letter, and how to do so truthfully and effectively.
+
+<Tip>
+Use the interview prep report to build your STAR story inventory before interviews. The Direct and Transferable match sections map directly to the stories you'll want to prepare — each matched experience is a story you should be able to tell in detail. The gap section tells you which capabilities to proactively address when the topic comes up, so you're never caught off guard.
+</Tip>
+
+---
+
+## Fallback behavior
+
+If the `document-skills` plugin is not installed, the skill falls back gracefully:
+
+- The **Markdown resume** is always generated — no plugin required
+- The skill **explicitly notes** which formats could not be generated and why
+- You can install the plugin and regenerate the DOCX/PDF at any time without redoing the research, matching, or content phases
+
+The skill never silently omits a format. If a generation step fails, you'll see an explicit message explaining what happened and what to do.
+
+---
+
+## User review
+
+After generating the files, the skill presents a quality summary and waits for your review:
+
+```
+Your tailored resume has been generated!
+
+FILES CREATED:
+- {Name}_{Company}_{Role}_Resume.md
+- {Name}_{Company}_{Role}_Resume.docx
+- {Name}_{Company}_{Role}_Resume_Report.md
+
+QUALITY METRICS:
+- JD Coverage: {percentage}%
+- Direct Matches: {percentage}%
+- Newly Discovered: {N} experiences
+
+Review the files and let me know:
+1. Save to library (recommended)
+2. Need revisions
+3. Save but don't add to library
+```
+
+If you request revisions — for example, "shorten the summary," "add more cloud examples," or "the second role has too many bullets" — the skill makes the changes and re-presents the output. You can iterate until satisfied before deciding whether to update the library.
+
+---
+
+## Library update (Phase 5)
+
+After you approve the final resume, the skill offers to add newly discovered experiences to your permanent resume library. This is entirely optional and entirely under your control.
+
+**What gets added:**
+- The tailored resume itself, including all newly written and reframed bullets
+- Any experiences surfaced during the Phase 2.5 discovery session that were approved for inclusion
+
+**What metadata is attached:**
+Each newly added entry is tagged with:
+- **Discovered date** — when the experience was first surfaced
+- **Target company** — the company this application was for
+- **Target role** — the role this application was for
+
+This metadata means future sessions can see not just what experiences you have, but where they've been used and how they performed — enabling smarter matching over time.
+
+**Why this matters:**
+Every application you run through the skill makes the next one faster and better. The library grows richer, match confidence improves, and experiences that required careful discovery the first time are immediately available the second time — already articulated as strong resume bullets.
+
+If you select "Save but don't add to library," the files are saved in their current location and the library is not modified. You can always manually move them later.
+
+<Note>
+By default, all generated files are saved to the `resumes/` directory in your project (or whatever path you specified during library initialization). The report file is saved alongside the resume files in the same directory for easy reference. If you move the resume to a different location before running another session, update the library path accordingly so the new content is included in future library builds.
+</Note>

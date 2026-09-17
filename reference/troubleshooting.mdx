@@ -1,0 +1,233 @@
+---
+title: "Troubleshooting common issues with Resume Tailoring Skill"
+sidebarTitle: "Troubleshooting"
+description: "Solutions for the most common issues: skill not appearing, research failures, DOCX generation errors, low match confidence, and multi-job batch edge cases."
+---
+
+Most issues with the Resume Tailoring Skill fall into a small number of categories: installation path problems, optional dependencies not being present, a thin resume library, or batch state edge cases. This page covers each known issue with its cause, diagnostic steps, and fix — ordered from the most fundamental (the skill isn't loading at all) to the more situational (batch mode behavior in edge cases).
+
+<AccordionGroup>
+
+<Accordion title="Skill not appearing in Claude Code">
+
+**Cause:** The skill files are not in the expected directory path, or Claude Code has not reloaded since installation.
+
+**Diagnose:**
+
+```bash
+ls ~/.claude/skills/resume-tailoring
+```
+
+You should see the following files:
+- `SKILL.md`
+- `research-prompts.md`
+- `matching-strategies.md`
+- `branching-questions.md`
+- `README.md`
+
+If any files are missing, or if the directory does not exist, re-run the installation:
+
+```bash
+git clone https://github.com/varunr89/resume-tailoring-skill.git ~/.claude/skills/resume-tailoring
+```
+
+**Fix:**
+
+1. Verify that all files are present at `~/.claude/skills/resume-tailoring/`
+2. Restart Claude Code completely (not just a new conversation)
+3. After restart, type `/skills` to see the list of loaded skills — `resume-tailoring` should appear in the list
+
+</Accordion>
+
+<Accordion title="Research phase failing or returning no results">
+
+**Cause:** The WebSearch capability is not enabled in Claude Code, or the target company has very limited public online presence.
+
+**Check WebSearch:**
+
+The research phase uses WebSearch to analyze company culture, role benchmarking via LinkedIn, and recent company news. If WebSearch is not enabled in your Claude Code environment, the skill will detect this automatically.
+
+**What happens without WebSearch:**
+
+The skill gracefully falls back to JD-only analysis. It will still:
+- Parse the job description fully
+- Build a success profile from the JD content
+- Perform all matching and discovery steps
+
+Quality is somewhat lower than with research, but the output is still useful. The skill will note that research was skipped and why.
+
+**For obscure companies or startups:**
+
+If the company has minimal online presence even with WebSearch enabled, you can provide company context manually:
+
+```
+"Here is some background on the company:
+[paste relevant context — mission, team size, tech stack, values, etc.]"
+```
+
+The skill will incorporate this into the success profile in place of web research.
+
+</Accordion>
+
+<Accordion title="DOCX or PDF generation failing">
+
+**Cause:** The `document-skills` plugin is not installed in your Claude Code environment. This plugin is required for DOCX and PDF output; the core skill itself does not include it.
+
+**Check the plugin:**
+
+Verify that `document-skills` appears in your installed Claude Code plugins list.
+
+**Fix:**
+
+Install the `document-skills` plugin following the Claude Code plugin installation instructions for your environment.
+
+**If you cannot install the plugin:**
+
+The skill falls back to Markdown-only output automatically. The Markdown resume file is fully formatted and can be imported into other tools:
+
+- **Google Docs:** Open a new doc → File → Import → upload the `.md` file, or paste the content directly
+- **Microsoft Word:** Open a new document → paste the Markdown content, or use a Markdown-to-Word converter
+
+The Markdown output is structured for easy reformatting and contains all the same content as the DOCX version.
+
+</Accordion>
+
+<Accordion title="Low match confidence scores (below 60%)">
+
+**Cause:** The resume library does not contain experiences that closely match the target role's requirements, or the library is small (fewer than 5–10 resumes).
+
+**Step 1: Run the Experience Discovery phase**
+
+Before concluding that a gap is unaddressable, run the Experience Discovery phase. It uses a conversational branching interview specifically designed to surface experiences that exist but are not yet in your library — side projects, volunteer work, recent work not yet documented, adjacent experiences that transfer. This single step frequently moves a gap from the WEAK band into the ADJACENT or TRANSFERABLE band.
+
+**Step 2: Grow your library**
+
+A library of 10 or more resumes gives the matching algorithm significantly more material to work with. After each successful tailored resume, add it to your library. Each new resume increases coverage for future applications in related roles.
+
+**Step 3: Review gap handling recommendations**
+
+In the content matching checkpoint, the skill surfaces each gap with specific options: reframe adjacent experience, address in cover letter, omit the slot, or accept the gap. For non-critical requirements, a WEAK match (45–59%) may be acceptable — see the [confidence bands reference](/reference/matching-strategies#confidence-bands) for guidance on when a lower-confidence match is still usable.
+
+</Accordion>
+
+<Accordion title="Batch processing interrupted mid-session">
+
+**Cause:** The session ended, a connection dropped, or the user paused and returned later.
+
+**How auto-save works:**
+
+Batch state is automatically saved to `_batch_state.json` after each major milestone:
+- After each job completes
+- After the discovery phase
+- After gap analysis
+- After user checkpoints
+
+Completed jobs are not re-processed when a batch resumes.
+
+**How to resume:**
+
+Tell the skill to resume using either of these natural-language prompts:
+
+```
+"resume batch batch-2025-11-04-job-search"
+```
+```
+"continue my batch"
+```
+
+The skill will load the saved state, report which jobs are complete and which are pending, and pick up exactly where the session left off — including which phase the in-progress job was in when the session ended.
+
+**What to check if resume fails:**
+
+Open `resumes/batches/{batch_id}/_batch_state.json` and check:
+- `current_phase` — where the batch was when it stopped
+- Each job's `status` — `completed` jobs will be skipped; `in_progress` or `pending` jobs will be resumed
+- Each job's `current_phase` — identifies the exact phase to re-enter for `in_progress` jobs
+
+</Accordion>
+
+<Accordion title="Multi-job batch: jobs are too diverse">
+
+**Cause:** The jobs in the batch have low requirement overlap (below ~40%), making a shared discovery session less efficient than separate single-job workflows.
+
+**How the skill detects this:**
+
+During aggregate gap analysis, the skill measures requirement overlap between jobs. When overlap falls below 40%, it warns you:
+
+```
+"⚠️ I notice these jobs are quite diverse. Job similarity analysis:
+- Jobs 1, 2 (TPM roles): 85% requirement overlap ✓
+- Job 3 (Marketing): Only 20% overlap with others ⚠️"
+```
+
+**Your options:**
+
+1. **Split into separate batches (recommended):** Group similar roles together — for example, all TPM roles in one batch and all data science roles in another. Each batch gets a focused discovery session tuned to its roles.
+
+2. **Continue with unified discovery:** The skill will run a single discovery session covering all gap areas. This works but takes longer (~50 minutes instead of ~30) and the questions will span more diverse territory.
+
+3. **Remove dissimilar jobs:** Remove the outlier jobs from the batch and process them separately in single-job mode or a separate batch.
+
+**General recommendation:** Batch similar roles together (e.g., all TPM roles, all PM roles, all data science roles). Process outliers separately for best efficiency and focus.
+
+</Accordion>
+
+<Accordion title="Resume library has only 1–2 resumes">
+
+**Cause:** You are early in building your resume library, or you are using the skill for the first time.
+
+**What to expect:**
+
+The skill still works with a small library, but coverage scores will be lower because the matching algorithm has less material to draw from. You will likely see more WEAK and GAP bands than a user with 10+ resumes.
+
+**How to compensate:**
+
+1. **Run the Experience Discovery phase.** This is the most important step when your library is thin. The branching interview surfaces experiences that are not yet documented anywhere, compensating directly for a small library. Users with a 2-resume library who run thorough discovery often achieve coverage scores comparable to users with 10-resume libraries.
+
+2. **Add resumes after each session.** After every successful tailored resume, add it to your library. Your library grows with each application, and future applications benefit from everything captured so far.
+
+3. **Convert existing resumes.** If you have DOCX or PDF resumes, convert them to Markdown by pasting the text content into a `.md` file in your `resumes/` directory. Even a rough conversion gives the matching algorithm more to work with.
+
+</Accordion>
+
+<Accordion title="Content feels generic despite high confidence scores">
+
+**Cause:** High confidence means the skill found a strong match between your experience and the requirement — it does not automatically mean the bullet's framing is optimally positioned for the target company's specific culture, terminology, or team context.
+
+**At the content matching checkpoint:**
+
+When the skill presents the content mapping for your approval, you can request specific adjustments to any bullet before approving:
+
+```
+"The Kubernetes bullet is a good match but please frame it around
+reliability engineering rather than deployment speed."
+```
+
+```
+"Can you use the company's 'customer obsession' language in the
+impact statements for the Amazon application?"
+```
+
+**Provide hiring context:**
+
+If you know something about the hiring manager, the specific team, or the company's internal culture that the research phase did not surface, share it:
+
+```
+"This team is known for being very metrics-driven. Can you make
+sure every bullet has a quantitative outcome?"
+```
+
+**Use title reframing options:**
+
+At the template checkpoint, the skill offers title reframing alternatives. Choosing a title that matches the company's internal terminology can make the entire resume feel less generic even when the content itself is strong.
+
+</Accordion>
+
+</AccordionGroup>
+
+## Getting help
+
+If your issue is not covered here, or if you have found a bug, the best places to get help are:
+
+- **Bug reports and feature requests:** [GitHub Issues](https://github.com/varunr89/resume-tailoring-skill/issues)
+- **Questions and community discussion:** [GitHub Discussions](https://github.com/varunr89/resume-tailoring-skill/discussions)

@@ -1,0 +1,149 @@
+---
+title: "Incremental Batches: add new jobs to a completed batch"
+sidebarTitle: "Incremental Batches"
+description: "Extend a completed batch by adding new jobs without re-running discovery. The skill detects which gaps are already covered and runs a short incremental discovery session for new gaps only."
+---
+
+You process three jobs on Monday, complete the batch, and feel good about your applications. Then on Friday you spot two more roles at Stripe and Meta that are a strong fit. Starting a brand-new batch from scratch would mean rediscovering all the same experiences you already surfaced — answering the same Kubernetes and CI/CD questions you answered days ago. Incremental batches eliminate that rework. The skill loads your completed batch, sees that five experiences were already discovered, checks which of the new jobs' gaps are already covered, and only asks about what is genuinely new.
+
+## When to use incremental batches
+
+- **Adding jobs to an already-completed batch.** The batch state is preserved after completion, not deleted or archived.
+- **Found new roles after initial processing.** Discovered experiences do not expire — a Kubernetes story captured in Week 1 is still available in Week 3.
+- **Want to apply the same library investment to additional applications.** The richer your library grows through each batch, the less discovery work each subsequent addition requires.
+
+## How to trigger an incremental batch
+
+Tell the skill about the new jobs in natural language — no special syntax required:
+
+```
+"Add another job to my batch"
+```
+
+```
+"I found 2 more jobs at Stripe and Meta. Add them to my batch?"
+```
+
+```
+"Resume batch batch-2025-11-04-job-search and add jobs"
+```
+
+If you have multiple recent batches, the skill will ask which one to extend. If you have only one, it loads it automatically.
+
+## How incremental gap analysis works
+
+When you trigger an incremental batch, the skill:
+
+1. **Loads the existing batch state**, including all previously discovered experiences and the enriched library built during the original session.
+2. **Parses the new job descriptions** and extracts their requirements using the same lightweight quick-parse as Phase 0.
+3. **Matches new requirements against the enriched library** — which now includes every experience discovered in the original batch, not just your pre-existing resumes.
+4. **Surfaces only NEW gaps** — requirements from the new jobs that are not already covered at 60%+ confidence by the enriched library.
+
+Previously discovered experiences are never re-asked. The skill explicitly shows what is already covered versus what is new:
+
+```
+"Running incremental gap analysis for new jobs...
+
+NEW JOBS:
+- Job 4 (Stripe): Payment Systems Engineer
+- Job 5 (Meta): Senior TPM
+
+COVERAGE WITH EXISTING LIBRARY:
+(Library now includes 5 experiences discovered in previous session)
+
+- Job 4 (Stripe): 82% coverage
+- Job 5 (Meta): 75% coverage
+
+NEW GAPS (not covered by previous discoveries):
+- Payment systems experience (Job 4 only) 🔵
+- Large-scale social networking (Job 5 only) 🔵
+- React/frontend (Jobs 4, 5) 🟡
+
+ALREADY COVERED FROM PREVIOUS BATCH:
+✓ Kubernetes (from previous batch)
+✓ CI/CD (from previous batch)
+✓ Cross-functional leadership (from previous batch)
+
+NEW GAP COUNT: 3 (vs 14 in original batch)
+Estimated discovery time: 5–10 minutes (vs 30–40 for original batch)"
+```
+
+## Incremental discovery
+
+The incremental discovery session runs the same branching interview as Phase 2, but scoped only to the new gaps. Previous answers are never repeated. If a new job's gap turns out to already be covered by an existing library experience, it is skipped automatically — no question is asked.
+
+For most incremental additions involving similar roles, the discovery session takes **5–10 minutes** instead of the 30–40 minutes the original session required. The more similar your new jobs are to the original batch, the shorter the incremental session.
+
+## Example scenario
+
+This is the incremental batch example from the skill's documentation, end to end:
+
+**Week 1 — original batch:**
+- User processes 3 jobs (Microsoft, Google, AWS) in 40 minutes
+- Gap analysis finds 14 total gaps, 8 unique after deduplication
+- Shared discovery surfaces 5 new experiences (Kubernetes CI/CD, Azure migration, cross-functional leadership examples, hackathon project, open source contributions)
+- All 3 resumes generated with 85%, 88%, and 78% JD coverage
+
+**Week 2 — incremental addition:**
+- User finds 2 more roles at Stripe (Payment Systems Engineer) and Meta (Senior TPM)
+- Incremental gap analysis: only 3 new gaps versus the original 14
+  - Payment systems experience (Stripe-specific)
+  - Large-scale social networking (Meta-specific)
+  - React/frontend (both Stripe and Meta)
+- Incremental discovery session: 10 minutes
+  - Surfaces payment processing side project
+  - React work from bootcamp
+  - Large-scale system design coursework
+- Jobs 4 and 5 processed independently (per-job processing, same depth as original batch)
+- Total: 5 jobs, 8 experiences discovered, 20 minutes for the incremental addition
+
+The time saved versus starting a fresh 5-job batch: approximately 20 minutes, by not re-asking about 8 gaps that the original batch already covered.
+
+## File structure
+
+New jobs are added to the same batch directory under their own subdirectories, continuing the job numbering from where the original batch left off:
+
+```
+resumes/batches/batch-2025-11-04-job-search/
+├── _batch_state.json          ← updated with jobs 4, 5 and new discoveries
+├── _aggregate_gaps.md         ← from original batch
+├── _discovered_experiences.md ← updated with incremental discoveries
+├── _batch_summary.md          ← updated with incremental section
+├── job-1-microsoft/           ← original batch
+├── job-2-google/              ← original batch
+├── job-3-aws/                 ← original batch
+├── job-4-stripe/              ← incremental addition
+│   ├── success_profile.md
+│   ├── template.md
+│   ├── content_mapping.md
+│   └── {Name}_Stripe_Payment_Engineer_Resume.md (.docx, _Report.md)
+└── job-5-meta/                ← incremental addition
+    └── (same structure)
+```
+
+`_batch_summary.md` is updated with a clearly labeled incremental section:
+
+```markdown
+## Incremental Addition (2025-11-11)
+
+Added 2 new jobs to batch after initial completion.
+
+### Job 4: Payment Systems Engineer - Stripe
+...
+
+### Job 5: Senior TPM - Meta
+...
+
+## Updated Statistics
+- Total jobs: 5 (original 3 + added 2)
+- New experiences discovered (incremental): 3
+- Total experiences discovered: 8
+```
+
+<Note>
+New jobs continue the numbering from where the original batch left off — if your original batch had jobs 1 through 3, the first incremental job becomes job-4 and its directory is named `job-4-{company-slug}`. This keeps the entire batch history coherent in a single directory and makes it easy to see the order in which jobs were processed.
+</Note>
+
+<Tip>
+Incremental batches are most efficient when new jobs are similar to the original batch. If you add a role that requires substantially different skills — say, a Data Science role to a batch that was originally TPM-focused — the incremental gap analysis will surface a larger set of new gaps, and the discovery session will take longer. The efficiency gain still exists (you do not re-ask about shared requirements like cross-functional leadership), but it is smaller than when adding closely related roles.
+</Tip>

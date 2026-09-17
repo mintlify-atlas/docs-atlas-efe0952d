@@ -1,0 +1,136 @@
+---
+title: "Workflow overview: single-job and multi-job modes"
+sidebarTitle: "Workflow Overview"
+description: "Resume Tailoring Skill runs a structured multi-phase workflow. Understand each phase, when checkpoints occur, and how single-job and multi-job modes differ."
+---
+
+The Resume Tailoring Skill does not simply reformat your existing resume. It runs a structured, multi-phase workflow that researches the role, proposes a tailored structure, surfaces undocumented experiences through conversation, matches your history against every requirement with confidence scores, and generates professional output — all while pausing at key decision points to keep you in control. There are two modes: **single-job** for one application at a time, and **multi-job batch** for processing three to five similar roles together with shared discovery.
+
+## Single-Job Workflow
+
+The single-job workflow is the default. Invoke the skill with a job description and it walks through six phases automatically, stopping at two checkpoints for your approval.
+
+```
+Phase 0: Library Build (always first)
+   ↓
+Phase 1: Research (JD + Company + Role)
+   ↓
+Phase 2: Template (Structure + Titles)
+   ↓  [CHECKPOINT]
+Phase 2.5: Experience Discovery (Optional, Branching)
+   ↓
+Phase 3: Assembly (Matching + Scoring)
+   ↓  [CHECKPOINT]
+Phase 4: Generation (MD + DOCX + PDF + Report)
+   ↓  [USER REVIEW]
+Phase 5: Library Update (Conditional)
+```
+
+**Phase 0 — Library Build**
+The skill scans your `resumes/` directory (or a path you specify), reads every Markdown file, and builds an in-memory experience database: roles, bullets, skills, education, themes, and extracted metrics. This always runs first. Learn more in [Resume Library](/concepts/resume-library).
+
+**Phase 1 — Research**
+The skill parses the job description to extract explicit requirements, technical keywords, implicit preferences, and role archetype. It then runs web searches to build a company profile (mission, culture, business model) and benchmarks the role against similar LinkedIn profiles to identify what successful candidates look like. The output is a validated Success Profile that drives all downstream decisions.
+
+**Phase 2 — Template Generation** *(Checkpoint)*
+Using the Success Profile and library analysis, the skill proposes a full resume structure: section order, role consolidation decisions (when to merge promotions at the same company), title reframings, and bullet allocations per role. You review and approve the structure before any content is matched. You can adjust consolidation choices, title options, or allocation counts at this stage.
+
+**Phase 2.5 — Experience Discovery** *(Optional)*
+If gaps are identified — requirements with no library match above 60% confidence — the skill offers a conversational branching interview to surface undocumented experiences. This phase typically takes 10–15 minutes and frequently uncovers side projects, volunteer work, or recent accomplishments that close key gaps. It is optional: you can skip it if your library already covers the role well.
+
+**Phase 3 — Assembly** *(Checkpoint)*
+Every template slot is filled by scoring all candidate bullets from the library (and any newly discovered experiences) against the slot's requirement. The skill presents a complete coverage map: confidence bands for every bullet, all reframings applied with before/after pairs, and recommended handling for any remaining gaps. You approve the full mapping before generation begins.
+
+**Phase 4 — Generation**
+The skill compiles the approved mapping into a professional Markdown resume, a formatted DOCX file, an optional PDF, and a Generation Report that documents match scores, reframings applied, source resumes used, and interview prep recommendations.
+
+**Phase 5 — Library Update** *(Conditional)*
+After you review the generated files, the skill asks whether to save the resume to your library. If you approve, it moves all output files to the `resumes/` directory and rebuilds the database to include the new content — including any experiences discovered in Phase 2.5.
+
+## Multi-Job Batch Workflow
+
+When you provide multiple job descriptions, the skill detects multi-job intent and offers batch mode. Instead of running the full single-job workflow separately for each application, batch mode performs shared discovery once across all jobs, then processes each individually.
+
+```
+Phase 0: Intake & Batch Initialization
+   ↓
+Phase 1: Aggregate Gap Analysis (deduplicates across all jobs)
+   ↓
+Phase 2: Shared Experience Discovery (ask once, apply to all)
+   ↓
+Phase 3: Per-Job Processing (research + template + matching + generation for each)
+   ↓
+Phase 4: Batch Finalization (review all resumes, update library)
+```
+
+**Phase 0 — Intake & Batch Initialization**
+The skill collects all job descriptions (three to five), confirms multi-job mode with you, and runs the library build once for the entire batch. The library database is shared across all jobs.
+
+**Phase 1 — Aggregate Gap Analysis**
+Requirements are extracted from every job description simultaneously. The skill cross-references all requirements against the library and builds a unified gap map, deduplicating common gaps across jobs. A gap that appears in three of your target roles is flagged as HIGH-LEVERAGE — addressing it once helps three applications. Job-specific gaps are handled per-job in Phase 3.
+
+**Phase 2 — Shared Experience Discovery**
+A single branching interview covers all deduplicated gaps across every job. Questions include context about which roles each gap affects — for example: *"Cross-functional leadership appears in 2 of your target jobs (Microsoft, Google). Tell me about times you've led or coordinated across multiple teams."* Discovered experiences are tagged with which jobs they are relevant to and enriched into the shared library.
+
+**Phase 3 — Per-Job Processing**
+Each job is processed individually in sequence: company research, template generation, content matching, and file generation. Per-job processing uses the enriched library — including all experiences discovered in Phase 2 — so each resume benefits from the shared discovery session. Express mode is available if you prefer to minimize interactive checkpoints across jobs.
+
+**Phase 4 — Batch Finalization**
+All generated resumes are presented for review together. You can approve the batch, revise individual resumes, or review each one in detail. After approval, the library is updated with all new content. A batch summary report shows coverage across all jobs side by side.
+
+For complete implementation details, see the [Multi-Job Overview](/multi-job/overview).
+
+## Checkpoints explained
+
+Two formal checkpoints occur in every single-job run (and per-job in batch mode). Both require explicit approval before the workflow proceeds.
+
+**Checkpoint 1 — Template Approval (end of Phase 2)**
+
+The skill presents the proposed resume structure and waits for your response. At this checkpoint you can:
+- **Approve** the structure as proposed
+- **Adjust** role consolidation decisions (e.g., keep two promotions separate instead of merging them)
+- **Change** a proposed title reframing (the skill always offers at least two options with rationales)
+- **Reallocate** bullets between roles (e.g., give more space to an older but more relevant role)
+- **Go back** to Phase 1 if the Success Profile needs revision first
+
+**Checkpoint 2 — Content Mapping Approval (end of Phase 3)**
+
+The skill presents the complete bullet-by-bullet coverage map and waits for your response. At this checkpoint you can:
+- **Approve** the mapping and proceed to generation
+- **Swap** a matched bullet for an alternative candidate (the skill shows the top three for each slot)
+- **Reject** a reframing and use the original phrasing instead
+- **Change** how a gap is handled (reframe vs. cover letter mention vs. omit)
+- **Go back** to Phase 2.5 to run (or re-run) Experience Discovery if you realize a gap could be filled
+
+All checkpoints allow going back to any prior phase. Progress is preserved between phases, so returning to adjust the template does not discard research.
+
+## Time estimates
+
+The skill is designed to be fast enough to use for every application, not just high-priority ones.
+
+| Scenario | Multi-job batch | Sequential single-job | Time saved |
+|---|---|---|---|
+| 1 job | — | ~15 min | — |
+| 3 similar jobs | ~40 min | ~45 min | 11% |
+| 5 similar jobs | ~55 min | ~75 min | 27% |
+
+Time savings in batch mode come primarily from the shared discovery session: instead of a separate 10–15 minute interview for each job, one session covers all deduplicated gaps across the entire batch. Per-job processing time (research, matching, generation) is roughly the same in both modes.
+
+For incremental batch additions — adding two more jobs to a batch you processed last week — savings are even larger because previously discovered experiences are already in the library and only new gaps require a discovery session.
+
+<CardGroup cols={2}>
+  <Card
+    title="Research Phase deep dive"
+    icon="magnifying-glass"
+    href="/single-job/research-phase"
+  >
+    How the skill builds a Success Profile from job descriptions, company research, and role benchmarking — and why it matters for every downstream decision.
+  </Card>
+  <Card
+    title="Multi-Job Batch overview"
+    icon="layer-group"
+    href="/multi-job/overview"
+  >
+    Complete guide to multi-job mode: aggregate gap analysis, shared discovery sessions, per-job processing, and incremental batch additions.
+  </Card>
+</CardGroup>

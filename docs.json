@@ -1,72 +1,80 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mintlify Starter Kit",
+  "name": "Resume Tailoring Skill",
+  "theme": "palm",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#40993e",
+    "light": "#183018",
+    "dark": "#e4e8e4"
   },
-  "favicon": "/favicon.svg",
-  "navigation": {
-    "pages": [
-      {
-        "group": "Getting Started",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
+  "favicon": "https://media.brand.dev/b5178e57-7d81-4a7e-939f-92d52d7496ca.jpg",
   "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
+    "light": "https://media.brand.dev/f1986576-e8c8-439d-8199-89d74fab0460.png",
+    "dark": "https://media.brand.dev/f1986576-e8c8-439d-8199-89d74fab0460.png"
   },
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://app.mintlify.com"
+      "type": "github",
+      "href": "https://github.com/varunr89/resume-tailoring-skill"
     }
-  },
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
   },
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "github": "https://github.com/varunr89/resume-tailoring-skill"
     }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/design-philosophy",
+              "concepts/resume-library",
+              "concepts/workflow-overview"
+            ]
+          },
+          {
+            "group": "Single-Job Workflow",
+            "pages": [
+              "single-job/research-phase",
+              "single-job/template-generation",
+              "single-job/experience-discovery",
+              "single-job/content-matching",
+              "single-job/output-generation"
+            ]
+          },
+          {
+            "group": "Multi-Job Batch Mode",
+            "pages": [
+              "multi-job/overview",
+              "multi-job/aggregate-gap-analysis",
+              "multi-job/shared-discovery",
+              "multi-job/per-job-processing",
+              "multi-job/incremental-batches"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/matching-strategies",
+              "reference/branching-questions",
+              "reference/data-schemas",
+              "reference/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
   }
 }

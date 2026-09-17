@@ -1,0 +1,97 @@
+{
+  "projectType": "general",
+  "projectName": "Resume Tailoring Skill",
+  "projectDescription": "An AI-powered Claude Code skill that researches job roles, surfaces undocumented experiences through conversational discovery, and generates tailored, confidence-scored resumes from your existing resume library.",
+  "theme": "palm",
+  "primaryColor": "#40993e",
+  "lightColor": "#183018",
+  "darkColor": "#e4e8e4",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Core Concepts",
+            "pages": [
+              "concepts/design-philosophy",
+              "concepts/resume-library",
+              "concepts/workflow-overview"
+            ]
+          },
+          {
+            "group": "Single-Job Workflow",
+            "pages": [
+              "single-job/research-phase",
+              "single-job/template-generation",
+              "single-job/experience-discovery",
+              "single-job/content-matching",
+              "single-job/output-generation"
+            ]
+          },
+          {
+            "group": "Multi-Job Batch Mode",
+            "pages": [
+              "multi-job/overview",
+              "multi-job/aggregate-gap-analysis",
+              "multi-job/shared-discovery",
+              "multi-job/per-job-processing",
+              "multi-job/incremental-batches"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "reference/matching-strategies",
+              "reference/branching-questions",
+              "reference/data-schemas",
+              "reference/troubleshooting"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Multi-job batch processing (3–5 similar jobs) with shared experience discovery",
+    "Deep company and role research via WebSearch and LinkedIn benchmarking",
+    "Branching conversational discovery to surface undocumented experiences",
+    "Confidence-scored content matching with transparent gap identification",
+    "Truth-preserving optimization — never fabricates, intelligently reframes",
+    "Multi-format output: Markdown, DOCX, PDF, and interview prep reports",
+    "Self-improving resume library that grows with each successful application",
+    "Pause/resume and incremental batch support for long job searches"
+  ],
+  "publicApiSurface": [
+    "SKILL.md — main skill entry point with YAML frontmatter for Claude Code",
+    "Phase 0: Library initialization (scan resumes/ directory)",
+    "Phase 1: Research (JD parsing, company research, role benchmarking, success profile synthesis)",
+    "Phase 2: Template generation (role consolidation, title reframing, bullet allocation)",
+    "Phase 2.5: Branching experience discovery (optional, conversational)",
+    "Phase 3: Content matching with confidence scoring (Direct/Transferable/Adjacent/Impact)",
+    "Phase 4: Multi-format output generation (MD, DOCX, PDF, Report)",
+    "Phase 5: Library update (conditional, user-approved)",
+    "Multi-job Phase 0: Batch intake and initialization",
+    "Multi-job Phase 1: Aggregate gap analysis with deduplication",
+    "Multi-job Phase 2: Shared experience discovery with leverage classification",
+    "Multi-job Phase 3: Per-job processing loop (interactive or express mode)",
+    "Multi-job Phase 4: Batch finalization with review options",
+    "Incremental batch addition (add jobs to completed batches)",
+    "BatchState JSON schema (_batch_state.json)",
+    "JobState JSON schema (job_id, status, current_phase, coverage, gaps)",
+    "DiscoveredExperience JSON schema (experience_id, addresses_jobs, confidence_improvement)",
+    "AggregateGaps JSON schema (critical_gaps, important_gaps, job_specific_gaps)",
+    "Matching formula: Overall = (Direct×0.4) + (Transferable×0.3) + (Adjacent×0.2) + (Impact×0.1)",
+    "research-prompts.md — JD parsing, company research, role benchmarking, success profile prompts",
+    "matching-strategies.md — scoring algorithms and content reframing strategies",
+    "branching-questions.md — technical skill, soft skill, and recent work discovery patterns"
+  ]
+}

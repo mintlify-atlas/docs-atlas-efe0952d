@@ -1,0 +1,133 @@
+---
+title: "Install Resume Tailoring Skill in Claude Code"
+sidebarTitle: "Installation"
+description: "Install the Resume Tailoring Skill into Claude Code in two commands. Covers GitHub clone, manual installation, and verifying the skill loads correctly."
+---
+
+Installing Resume Tailoring Skill takes under two minutes. The skill lives in Claude Code's `~/.claude/skills/` directory, where Claude Code automatically discovers and loads it. Choose the GitHub method for one-command setup and easy future updates, or follow the manual steps if you prefer to download the files directly.
+
+## Prerequisites
+
+Before installing, make sure you have:
+
+- **Claude Code** with skills enabled
+- **Git** (for the GitHub installation method)
+- **An existing resume library** — at least 1–2 resumes in markdown format. See [Resume library setup](#resume-library-setup) below.
+
+## Install the skill
+
+<Tabs>
+  <Tab title="GitHub (Recommended)">
+    **Step 1 — Clone the repository directly into the skills directory:**
+
+    ```bash
+    git clone https://github.com/varunr89/resume-tailoring-skill.git ~/.claude/skills/resume-tailoring
+    ```
+
+    **Step 2 — Verify the files are in place:**
+
+    ```bash
+    ls ~/.claude/skills/resume-tailoring
+    ```
+
+    You should see:
+
+    ```
+    SKILL.md
+    research-prompts.md
+    matching-strategies.md
+    branching-questions.md
+    README.md
+    ```
+
+    **Step 3 — Restart Claude Code** if it is already running, so it picks up the new skill.
+
+    To update the skill in the future, run:
+
+    ```bash
+    cd ~/.claude/skills/resume-tailoring && git pull
+    ```
+  </Tab>
+  <Tab title="Manual Installation">
+    **Step 1 — Create the skill directory:**
+
+    ```bash
+    mkdir -p ~/.claude/skills/resume-tailoring
+    ```
+
+    **Step 2 — Download the files:**
+
+    Visit [github.com/varunr89/resume-tailoring-skill](https://github.com/varunr89/resume-tailoring-skill) and download the repository as a ZIP, or download each file individually:
+
+    - `SKILL.md`
+    - `research-prompts.md`
+    - `matching-strategies.md`
+    - `branching-questions.md`
+    - `README.md`
+
+    **Step 3 — Place the files** in `~/.claude/skills/resume-tailoring/`.
+
+    **Step 4 — Verify the installation:**
+
+    ```bash
+    ls ~/.claude/skills/resume-tailoring
+    ```
+
+    Expected output:
+
+    ```
+    SKILL.md
+    research-prompts.md
+    matching-strategies.md
+    branching-questions.md
+    README.md
+    ```
+
+    **Step 5 — Restart Claude Code** (if already running).
+  </Tab>
+</Tabs>
+
+## Verify the skill loads
+
+After restarting Claude Code, type `/skills` in the chat. The `resume-tailoring` skill should appear in the list.
+
+<Warning>
+**Skill not appearing?** Check that the files are in `~/.claude/skills/resume-tailoring/` (not a nested subdirectory), that `SKILL.md` is present and has valid YAML frontmatter, and that you have fully restarted Claude Code. Saving files to a different path — such as `~/.claude/skills/resume-tailoring-skill/` — will prevent the skill from loading.
+</Warning>
+
+## Resume library setup
+
+The skill builds tailored resumes by matching your experience against a job description. It needs an existing library of resumes in markdown format to work from.
+
+**Create your resumes directory:**
+
+```bash
+mkdir -p ~/resumes
+```
+
+**Add your existing resumes as `.md` files.** A typical library looks like this:
+
+```
+~/resumes/
+├── Resume_Microsoft_SeniorPM_2024.md
+├── Resume_Google_TPM_2023.md
+├── Resume_General_2024.md
+└── Resume_Startup_ProductLead_2022.md
+```
+
+Each file should contain your resume content in markdown — headings for sections, bullet points for experience entries, and plain text for education and skills. The skill parses these files to build an in-memory experience database, so the more clearly structured they are, the better the matching quality.
+
+<Tip>
+**10 or more resumes in your library gives the best results.** A larger library gives the skill more bullet variations, more phrasing options, and more evidence to draw from when building a confidence-scored match against a job description. Even resumes from years ago add value — older bullets can be reframed or used as context for experience discovery.
+</Tip>
+
+## Optional enhancements
+
+These are not required, but they significantly improve the skill's output:
+
+| Enhancement | What it enables |
+|---|---|
+| **WebSearch capability** | Company culture research, LinkedIn role benchmarking, success profile synthesis. Without it, the skill falls back to job-description-only analysis. |
+| **`document-skills` plugin** | DOCX and PDF output. Without it, the skill generates markdown only. |
+
+To enable WebSearch, check your Claude Code settings for web access permissions. To install the `document-skills` plugin, follow the plugin's own installation instructions and verify it appears in `/plugins` within Claude Code.

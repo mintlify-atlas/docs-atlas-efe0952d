@@ -1,47 +1,234 @@
 ---
-title: "Quickstart"
-description: "Begin with a guide on the fastest path to a successful outcome"
+title: "Get started with Resume Tailoring Skill"
+sidebarTitle: "Quickstart"
+description: "Tailor your first resume in under 15 minutes. Provide a job description, answer a few questions, and receive a polished multi-format resume optimized for the role."
 ---
 
-Describe how someone begins using your product. What is the first thing they need to do? Are there any prerequisites?
+Resume Tailoring Skill takes a job description and your existing resume library and walks you through a structured, checkpoint-driven process that ends with a polished, confidence-scored resume in markdown, DOCX, and PDF formats — plus an interview prep report. The whole flow typically takes 15–45 minutes depending on library size and how much experience discovery you want to do.
 
-A quickstart should take someone from zero to using your product. They'll get a quick win and a sense of what they can accomplish.
+<Note>
+**Checkpoints keep you in control.** The skill pauses at key decision points — after presenting its research findings, after proposing a resume structure, and after mapping content with confidence scores — and waits for your approval before proceeding. You can adjust, go back, or redirect at any checkpoint.
+</Note>
 
-## Prerequisites
-
-Before you begin, you must have:
-
-- Requirement one (for example, Node.js 18+, a free account, an API key)
-- Requirement two (for example, a compatible device, a compatible browser, a compatible operating system)
-
-## Get started
+## Steps
 
 <Steps>
-  <Step title="Install">
-    Describe how to install your product or sign up.
+  <Step title="Install the skill">
+    If you haven't already, follow the [Installation guide](/installation) to clone the skill into Claude Code and verify it loads.
 
     ```bash
-    npm install your-package
+    git clone https://github.com/varunr89/resume-tailoring-skill.git ~/.claude/skills/resume-tailoring
     ```
+
+    Restart Claude Code, then confirm the skill appears when you type `/skills`.
   </Step>
-  <Step title="Configure">
-    Describe any setup or configuration needed before first use.
+
+  <Step title="Set up your resume library">
+    Create a directory for your resumes and add your existing resumes as markdown files:
 
     ```bash
-    your-cli init
+    mkdir -p ~/resumes
     ```
+
+    Then add your resumes:
+
+    ```
+    ~/resumes/
+    ├── Resume_Company1_Role1.md
+    ├── Resume_Company2_Role2.md
+    └── Resume_General_2024.md
+    ```
+
+    Each file should contain your resume in markdown format. The skill defaults to looking in `resumes/` in the current directory, or you can specify a path when you invoke it.
+
+    <Tip>
+      The more resumes in your library, the higher quality the output. With 10+ resumes, the skill has a rich pool of bullet variations, phrasing options, and experience evidence to draw from. Even older resumes from past roles add value — they expand the matching pool and can surface experiences worth reframing for a new context.
+    </Tip>
   </Step>
-  <Step title="Run it">
-    Show the first thing a user does to see it working.
 
-    ```bash
-    your-cli start
+  <Step title="Open Claude Code and invoke the skill">
+    Open Claude Code and paste your job description with a simple natural-language prompt:
+
     ```
+    I want to apply for [Role] at [Company]. Here's the JD: [paste job description]
+    ```
+
+    For example:
+
+    ```
+    I want to apply for Principal PM role in 1ES team at Microsoft.
+    Here's the JD: [paste]
+    ```
+
+    The skill auto-detects whether you've provided a single job description or multiple (for batch mode). If you provide multiple JDs, it will offer to activate multi-job batch processing.
+  </Step>
+
+  <Step title="The skill builds your resume library">
+    The skill begins with **Phase 0: Library Initialization**. It scans your resume directory, parses each markdown file, and builds an in-memory experience database — extracting roles, bullets, skills, education, metrics, themes, and keywords.
+
+    You'll see a progress message like:
+
+    ```
+    Building resume library... found 29 resumes
+    ```
+
+    This runs automatically with no input required.
+  </Step>
+
+  <Step title="Approve or adjust the research findings checkpoint">
+    Next the skill enters **Phase 1: Research**. It parses the job description, researches the company's culture and values, benchmarks the role against similar LinkedIn profiles, and synthesizes a "success profile" — a structured view of what makes candidates competitive for this exact role.
+
+    The skill then pauses and presents its findings:
+
+    ```
+    Based on my research, here's what makes candidates successful for this role:
+
+    [SUCCESS_PROFILE_SUMMARY]
+
+    Key findings:
+    - ...
+    - ...
+
+    Does this match your understanding? Any adjustments?
+    ```
+
+    Review the profile. If something looks off — maybe the company emphasis is wrong, or a key requirement is missing — you can correct it before the skill moves on. Approve to continue.
+  </Step>
+
+  <Step title="Review and approve the template structure checkpoint">
+    In **Phase 2: Template Generation**, the skill proposes an optimized resume structure: section order, role consolidation decisions (e.g., whether to merge two positions at the same company), title reframing options, and bullet allocation per role.
+
+    For each reframing, you'll see options with rationale:
+
+    ```
+    TITLE OPTIONS for [Company]:
+      A: "Technical Program Manager" (original)
+      B: "Program Manager, Environmental Systems" (emphasizes domain fit)
+      Recommended: B — because the target role values environmental systems thinking
+
+    Does this structure work? Any adjustments to role consolidation, titles, or bullet allocation?
+    ```
+
+    Approve the structure to proceed to the next phase.
+  </Step>
+
+  <Step title="Optional: Complete the branching experience discovery interview">
+    After template approval, if the skill identifies gaps or weak matches, it offers an optional **Experience Discovery** session:
+
+    ```
+    I've identified 4 gaps where we have weak matches:
+    - Kubernetes/container orchestration: 45% confidence
+    - Cross-functional team leadership at scale: 52% confidence
+    ...
+
+    Would you like to do a structured brainstorming session to surface
+    any experiences you haven't documented yet?
+
+    This typically takes 10-15 minutes and often uncovers valuable content.
+    ```
+
+    If you accept, the skill conducts a conversational branching interview — starting with open probes, following up based on your answers, and helping you articulate undocumented experiences (volunteer work, side projects, startup work, open-source contributions) as polished resume bullets. Each discovered experience is tagged to the gap it addresses and integrated into your library.
+
+    You can skip this step if you're confident your library already covers the role well.
+  </Step>
+
+  <Step title="Review content matching with confidence scores">
+    In **Phase 3: Assembly**, the skill maps the best-matching content from your library to each slot in the approved template. Every bullet is scored across direct match, transferable capability, adjacent relevance, and impact alignment — and you see the top three candidates for each slot before anything is committed.
+
+    The skill pauses with a full coverage summary:
+
+    ```
+    COVERAGE SUMMARY:
+    - Direct matches: 18 bullets (75%)
+    - Transferable:    4 bullets (17%)
+    - Adjacent:        1 bullet  (4%)
+    - Gaps:            1         (4%)
+
+    REFRAMINGS APPLIED: 3
+    - "Program Coordinator" → "Project Manager" [standard industry term]
+    - ...
+
+    OVERALL JD COVERAGE: 92%
+
+    Review the detailed mapping below. Any adjustments?
+    ```
+
+    Approve the mapping to trigger file generation.
+  </Step>
+
+  <Step title="Receive your generated files">
+    In **Phase 4: Generation**, the skill produces:
+
+    | File | Description |
+    |---|---|
+    | `{Name}_{Company}_{Role}_Resume.md` | Clean markdown resume ready to review or edit |
+    | `{Name}_{Company}_{Role}_Resume.docx` | ATS-friendly Word document with professional formatting |
+    | `{Name}_{Company}_{Role}_Resume.pdf` | Print-ready PDF (requires `document-skills` plugin) |
+    | `{Name}_{Company}_{Role}_Resume_Report.md` | Interview prep report with match analysis, reframings, gap recommendations, and stories to prepare |
+
+    After reviewing, you can choose to save the resume to your library (so its bullets and newly discovered experiences become available for future tailoring sessions), request revisions, or save without adding to the library.
   </Step>
 </Steps>
 
-<Tip>
-  Give people a way to get help. This could be a link to a support page, a chat with a customer support agent, or a forum for your product.
+---
 
-  Example: Need help? Reach out to us at [support@yourcompany.com](mailto:support@yourcompany.com).
-</Tip>
+## Example invocations
+
+### Internal role transfer
+
+Applying for a promotion or lateral move within your current company:
+
+```
+I want to apply for Principal PM role in 1ES team at Microsoft.
+Here's the JD: [paste]
+```
+
+The skill features your most relevant internal experience, uses internal terminology, and leverages organizational context from research. In one example run: found 29 existing resumes, researched Microsoft 1ES team culture, featured PM2 Azure Eng Systems experience, discovered a VS Code extension and AI side project through discovery, and achieved 92% JD coverage with 75% direct matches.
+
+### Career transition
+
+Bridging from one domain to another:
+
+```
+I'm a TPM transitioning to an ecology PM role. Here's the JD: [paste]
+```
+
+The skill reframes titles (e.g., "Technical Program Manager" → "Program Manager, Environmental Systems"), surfaces transferable skills, and provides transparent gap analysis. It flagged a 65% JD coverage with clear gap analysis and cover letter recommendations for missing domain-specific knowledge.
+
+### Handling career gaps
+
+Turning a gap into a strength:
+
+```
+I have a 2-year gap from starting a company. Here's the JD: [paste]
+```
+
+The skill includes the startup as a legitimate role, surfaces skills developed during it (fundraising, product development, team building), and frames the gap as entrepreneurial experience showing initiative and diverse skills.
+
+### Multiple jobs at once
+
+For batch applications to similar roles, see the [Multi-Job Overview](/multi-job/overview). A quick example:
+
+```
+I want to apply for these 3 TPM roles:
+1. Microsoft 1ES - Principal PM: [JD or URL]
+2. Google Cloud - Senior TPM: [JD or URL]
+3. AWS Container Services - Senior PM: [JD or URL]
+```
+
+The skill detects multi-job intent, offers batch mode, builds your library once, conducts a single shared discovery session covering all gaps, then processes each job individually — saving 11–27% of time versus running them sequentially.
+
+---
+
+## What you'll receive
+
+After a complete run, you'll have four files for each job:
+
+| Output | Format | Purpose |
+|---|---|---|
+| **Tailored resume** | `.md` | Primary resume content — readable, editable, version-controllable |
+| **Word document** | `.docx` | ATS-compatible submission format with professional fonts and spacing |
+| **PDF** | `.pdf` | Print-ready format for direct submission (requires `document-skills` plugin) |
+| **Generation report** | `_Report.md` | Full match analysis: confidence scores, reframings applied, gaps with recommendations, interview stories to prepare, source resumes used |
+
+The generation report is particularly useful before interviews — it tells you exactly where your resume is strong, where it's a stretch, and which experiences you should be ready to elaborate on.

@@ -1,0 +1,101 @@
+---
+title: "Resume Library: how the skill builds and uses your history"
+sidebarTitle: "Resume Library"
+description: "The resume library is the foundation of every tailored resume. Learn how to set it up, what formats work best, and how the skill enriches it after each successful application."
+---
+
+The resume library is the single most important input to the Resume Tailoring Skill. Before the skill researches a company, proposes a template, or writes a single bullet, it reads every resume you have ever written and builds a searchable database of your entire documented history — every role, every achievement, every skill, every metric. The richer that library, the more material the skill has to work with, and the higher the match confidence it can achieve against any job description.
+
+## What is the resume library
+
+The resume library is a directory of your existing resumes stored in Markdown format. Think of it as your career archive: not a single polished document written for one specific application, but the full collection of every tailored resume, general resume, and role-specific document you have accumulated over time.
+
+When Phase 0 runs, the skill scans this directory and indexes everything it finds into an in-memory experience database. Every role becomes a structured record. Every bullet is tagged with themes (leadership, technical, analytics), extracted metrics (numbers, percentages, dollar amounts), and domain keywords. That database is what every subsequent matching decision draws from.
+
+- **Default location:** `resumes/` in the current working directory
+- **Every experience, skill, and achievement is indexed** — bullets you wrote years ago for one application become candidates for a completely different role today
+- **The library is the skill's memory** — a larger, more varied library means more matching options and higher confidence scores across a wider range of job descriptions
+
+## Setting up the library
+
+Create the `resumes/` directory and populate it before invoking the skill for the first time:
+
+```bash
+mkdir -p ~/resumes
+```
+
+Add your existing resumes in Markdown format. A typical starting library might look like this:
+
+```
+~/resumes/
+├── Resume_Google_SoftwareEngineer_2022.md
+├── Resume_Amazon_SeniorPM_2023.md
+├── Resume_General_2024.md
+├── Resume_Microsoft_PrincipalPM_2024.md
+└── Resume_Startup_CTO_2021.md
+```
+
+<Tip>
+  Name files by company and role — for example, `Resume_Stripe_SeniorTPM_2025.md` — rather than by date alone. Descriptive names make it easy to find a specific resume later, and the skill uses filenames as source attribution in its coverage reports (e.g., "4 bullets sourced from `Resume_Google_SoftwareEngineer_2022.md`").
+</Tip>
+
+**Naming convention recommendation:** `Resume_{Company}_{Role}_{Year}.md`. Keep it consistent so the filenames are meaningful in the skill's output reports.
+
+**How many resumes do you need?**
+
+| Library size | What to expect |
+|---|---|
+| 1–2 resumes | Skill will work, but matching options are limited. Expect more gaps and weaker confidence scores. Experience Discovery is especially important. |
+| 3–9 resumes | Good baseline. Most requirements will have at least one candidate bullet. |
+| 10+ resumes | Recommended. The skill has broad coverage across domains, roles, and phrasings. Match confidence is consistently high. |
+
+<Warning>
+  If your library has fewer than 3 resumes, the skill will warn you before proceeding. You will still get a tailored resume — the skill works with whatever is available — but coverage gaps will be more frequent and the Experience Discovery phase becomes critical for filling them. Consider adding more resumes to the library before your first session if possible.
+</Warning>
+
+## Supported format
+
+The skill reads **Markdown (`.md`) files only**. Plain text structured with standard Markdown headings, lists, and bold/italic formatting is all that is needed. No special schema is required — the skill parses narrative structure.
+
+**If your resumes are in DOCX or PDF format:** Open the file, select all, copy, and paste the text into a new `.md` file. Save it with a descriptive name in your `resumes/` directory. You do not need to add any Markdown formatting — the skill can parse plain text — but adding `##` headings for sections and `-` bullets for achievements will improve parsing accuracy.
+
+A minimal valid resume file looks like this:
+
+```markdown
+# Jane Smith
+
+## Experience
+
+### Senior Product Manager | Acme Corp | 2021–2024
+- Led cross-functional team of 12 to ship payment redesign, reducing checkout abandonment by 23%
+- Defined and executed roadmap for B2B product line, growing ARR from $4M to $11M in 18 months
+- Partnered with engineering and design on 0→1 feature development across 3 product areas
+
+### Product Manager | Early Stage Startup | 2019–2021
+- Built and shipped mobile app from concept to 50k MAU in 14 months
+
+## Skills
+Product strategy, roadmap planning, SQL, Figma, stakeholder management
+
+## Education
+MBA | Stanford GSB | 2019
+BS Computer Science | UC Berkeley | 2016
+```
+
+## How the library is used
+
+**Phase 0 scans and indexes the library.** At the start of every session, the skill reads every `.md` file in your resume directory, extracts all roles and bullets, and builds the experience database. This happens before any job-specific work begins. The skill announces how many resumes it found: `"Building resume library... found 14 resumes."` If the directory is missing or empty, it stops and asks you to provide a path.
+
+**The matching algorithm searches the database for each template slot.** After a resume structure is approved in Phase 2, every bullet slot in the template is filled by scoring all candidate bullets from the database against that slot's requirement. The scoring model weighs direct keyword overlap (40%), transferable capability (30%), adjacent experience (20%), and impact alignment (10%). The skill shows you the top candidates for each slot with their confidence scores before asking you to approve the final mapping.
+
+**Confidence scores reflect library coverage.** A slot that scores 90%+ means your library has a near-perfect match. A slot that scores below 60% means no existing bullet covers that requirement well — which may prompt the Experience Discovery phase to search for undocumented work that fills the gap.
+
+## Self-improving library
+
+The resume library is not a static archive. After each successful tailoring session, the skill offers to save the generated resume back to the library — and when it does, the library gets smarter.
+
+**After each successful resume, the skill can add new experiences discovered during the session.** If the Experience Discovery phase surfaces work you had not previously documented — a side project, volunteer role, or recent accomplishment — those experiences become first-class library entries. The next time you apply for a role that requires similar capabilities, the skill already knows about them.
+
+**You approve what gets added.** At the end of Phase 5, the skill presents the generated resume and asks whether to save it to the library. If you approve, it moves all output files to your `resumes/` directory and rebuilds the database to include the new content. You can also choose to save the files without adding them to the library — useful for experimental or one-off resumes you do not want to influence future matching.
+
+**The library grows richer over time.** Each approved resume adds new bullet variations, new reframings that tested well, and any newly discovered experiences. A library of 29 resumes built over several years of using the skill will contain far more nuanced coverage than 29 resumes written independently — because each generation session was optimized against a real job description and validated by a human reviewer.

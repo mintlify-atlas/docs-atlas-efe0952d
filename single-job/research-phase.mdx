@@ -1,0 +1,175 @@
+---
+title: "Research Phase: building a success profile for your target role"
+sidebarTitle: "Research Phase"
+description: "Phase 1 researches company culture, parses the job description, and benchmarks LinkedIn profiles to build a success profile the rest of the workflow is built on."
+---
+
+Before any content from your resume library is touched, the skill invests in understanding exactly what success looks like for the role you're targeting. Phase 1 combines structured job description analysis, live company research, and LinkedIn role benchmarking to produce a **Success Profile** — a validated document that every downstream phase uses to score, match, and frame your experience. Getting this foundation right is what separates a keyword-stuffed resume from one that speaks the hiring team's language.
+
+## What the research phase produces
+
+The output of Phase 1 is a **Success Profile** document for the target role. It captures not just the explicit requirements from the job description but also the implicit signals — the cultural vocabulary, the career patterns of current role holders, and the risk factors that might make a reviewer hesitate. The rest of the workflow (template generation, content matching, output generation) is entirely driven by this profile.
+
+---
+
+## Job Description Parsing
+
+The skill begins by extracting five categories of information from the job description:
+
+| Category | What it captures |
+|---|---|
+| **Explicit Requirements** | Must-have vs. nice-to-have skills and qualifications |
+| **Technical Keywords** | Domain terminology and technology names used by the team |
+| **Implicit Preferences** | Cultural signals and hidden requirements embedded in phrasing |
+| **Red Flags** | Overqualification risks, scope mismatches, or signals to address |
+| **Role Archetype** | IC technical contributor / people leadership / cross-functional |
+
+The parsing uses this prompt template:
+
+```
+Analyze this job description and extract:
+
+1. EXPLICIT REQUIREMENTS (must-have vs nice-to-have)
+2. TECHNICAL KEYWORDS and domain terminology
+3. IMPLICIT PREFERENCES (cultural signals, hidden requirements)
+4. RED FLAGS (overqualification risks, mismatches)
+5. ROLE ARCHETYPE (IC technical / people leadership / cross-functional)
+
+Job Description:
+{JD_TEXT}
+
+Output as structured sections.
+```
+
+---
+
+## Company Research
+
+Once the job description is parsed, the skill runs four targeted web searches to build context about the company:
+
+```
+1. "{company_name} mission values culture"
+2. "{company_name} engineering blog"
+3. "{company_name} recent news product launches"
+4. "{company_name} team structure engineering"
+```
+
+The search results are then synthesized into a company context summary covering:
+
+- **Mission and values** — what the company publicly stands for
+- **Cultural priorities** — what behaviors and mindsets the organization rewards
+- **Business model and customer base** — who they serve and how
+- **Team structure** — org design and reporting relationships where available
+- **Company stage** — startup, growth-stage, or mature enterprise, and what each implies for the role
+
+This context directly informs how the skill frames your experience. A growth-stage startup values scrappiness and breadth; a large engineering organization may prioritize process rigor and cross-functional coordination. The terminology differs, and the profile captures both.
+
+---
+
+## Role Benchmarking
+
+To understand what successful candidates for this role actually look like in practice, the skill searches LinkedIn for people already holding similar positions:
+
+```
+1. Search: "site:linkedin.com {job_title} {company_name}"
+2. Fetch: Top 3–5 profiles
+3. Fallback: "site:linkedin.com {job_title} {similar_company}"
+```
+
+From those profiles, the skill extracts:
+
+- **Career path patterns** — what backgrounds and prior roles are common
+- **Emphasized skills and project types** — what these people choose to highlight
+- **Terminology** — how they describe work that might be similar to yours
+- **Notable accomplishments and themes** — what achievements appear repeatedly
+
+If LinkedIn results are sparse for the target company, the skill automatically falls back to searching for the same title at similar companies in the same industry or stage.
+
+---
+
+## Success Profile Synthesis
+
+The job description analysis, company research, and role benchmarking are combined into a structured Success Profile. The synthesis prompt:
+
+```
+Combine job description analysis, company research, and role benchmarking into:
+
+## Success Profile: {Role} at {Company}
+
+### Core Requirements (Must-Have)
+- {Requirement}: {Evidence from JD/research}
+
+### Valued Capabilities (Nice-to-Have)
+- {Capability}: {Why it matters in this context}
+
+### Cultural Fit Signals
+- {Value}: {How to demonstrate}
+
+### Narrative Themes
+- {Theme}: {Examples from similar role holders}
+
+### Terminology Map
+Standard term → Company-preferred term
+
+### Risk Factors
+- {Concern}: {Mitigation strategy}
+```
+
+Each section serves a specific purpose in later phases:
+
+- **Core Requirements** drive template slot allocation and content matching thresholds
+- **Valued Capabilities** inform which secondary experiences are worth surfacing
+- **Cultural Fit Signals** shape the tone and framing of bullets and the summary
+- **Narrative Themes** guide the overall story the resume tells
+- **Terminology Map** powers keyword alignment reframing (replacing your terminology with theirs)
+- **Risk Factors** flag areas to address proactively or handle carefully
+
+---
+
+## What happens at the checkpoint
+
+After building the Success Profile, the skill presents it to you before proceeding:
+
+```
+Based on my research, here's what makes candidates successful for this role:
+
+{SUCCESS_PROFILE_SUMMARY}
+
+Key findings:
+- {Finding 1}
+- {Finding 2}
+- {Finding 3}
+
+Does this match your understanding? Any adjustments?
+```
+
+The skill waits for your confirmation before moving to Phase 2. This is an important moment: if the research has misread the role, over-indexed on one aspect of the company, or missed context you have from conversations with the hiring team, this is the place to correct it.
+
+<Note>
+At the Phase 1 checkpoint, you can adjust the company context, correct research errors, or add insider knowledge you have from conversations with the recruiter or hiring manager. Changes you make here propagate through every downstream phase — the template, the content matching, and the final resume all derive from this profile.
+</Note>
+
+---
+
+## Fallback behavior
+
+If WebSearch is unavailable or returns insufficient results, the skill falls back to **job-description-only analysis**. The Success Profile is built solely from what can be parsed from the JD text itself — without company research or role benchmarking. The skill announces the fallback explicitly:
+
+```
+⚠️ Limited company research available.
+
+What I found: {Available info}
+What's missing: {Missing areas}
+
+Falling back to job description-only analysis.
+Result: Template will be optimized for JD but may miss cultural nuances.
+
+Do you have additional context about:
+- Company culture?
+- Team structure?
+- Technologies used?
+
+(Optional — you can share or skip)
+```
+
+JD-only mode still produces a useful Success Profile, but the Terminology Map and Cultural Fit Signals sections will be thinner. Providing context directly in response to the fallback prompt restores much of what would otherwise be missing.

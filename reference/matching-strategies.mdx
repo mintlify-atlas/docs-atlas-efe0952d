@@ -1,0 +1,192 @@
+---
+title: "Content Matching Strategies and Scoring Algorithm"
+sidebarTitle: "Matching Strategies"
+description: "Reference for the four-factor confidence scoring formula, confidence band thresholds, and the four reframing strategies used to adapt experience language to target role terminology."
+---
+
+The Resume Tailoring Skill selects resume content through a transparent, multi-dimensional confidence scoring system. Rather than binary keyword matching, every candidate experience is scored across four weighted dimensions — Direct Match, Transferable Skills, Adjacent Experience, and Impact Alignment — then combined into a single Overall Confidence Score that drives automatic content selection, reframing suggestions, and gap identification.
+
+## Scoring formula
+
+The overall confidence score for any experience-to-requirement pairing is calculated as a weighted sum of four dimension scores:
+
+```
+Overall = (Direct × 0.4) + (Transferable × 0.3) + (Adjacent × 0.2) + (Impact × 0.1)
+```
+
+| Dimension | Weight | What it measures |
+|---|---|---|
+| **Direct Match** | 40% | Keyword overlap, same domain/technology, same outcome type, same scale or complexity |
+| **Transferable Skills** | 30% | Same capability applied in a different context, domain, or industry |
+| **Adjacent Experience** | 20% | Secondary responsibilities, related tools, supporting roles in the relevant area |
+| **Impact Alignment** | 10% | Whether the achievement type matches what the role values (data-driven, collaborative, innovative, etc.) |
+
+## Scoring each dimension
+
+### Direct Match (40%)
+
+Measures how closely the experience aligns with the explicit requirements of the job description — shared keywords, the same technology domain, equivalent outcome types, and comparable scale.
+
+| Score Range | Label | Meaning |
+|---|---|---|
+| 90–100% | Exact match | Same skill, same domain, same context |
+| 70–89% | Strong match | Same skill, different domain |
+| 50–69% | Good match | Overlapping keywords, similar outcomes |
+| < 50% | Weak direct match | Surface-level or incidental keyword overlap |
+
+### Transferable Skills (30%)
+
+Measures whether the same underlying capability is demonstrated, even if the domain, technology stack, or industry differs from the target role.
+
+| Score Range | Label | Meaning |
+|---|---|---|
+| 90–100% | Directly transferable | Process or skill is generic; no translation needed |
+| 70–89% | Mostly transferable | Some domain translation required |
+| 50–69% | Partially transferable | An analogy or reframing is required |
+| < 50% | Stretch | Difficult to credibly claim transferability |
+
+### Adjacent Experience (20%)
+
+Measures whether the experience touches the required area — as a secondary responsibility, via related tools, or through a supporting role — even if it was not the primary focus.
+
+| Score Range | Label | Meaning |
+|---|---|---|
+| 90–100% | Closely adjacent | Different framing only; substance is essentially the same |
+| 70–89% | Clearly adjacent | Related but distinct; connection is obvious |
+| 50–69% | Somewhat adjacent | Requires explanation to make the connection |
+| < 50% | Loosely adjacent | Tenuous connection; unlikely to convince a reader |
+
+### Impact Alignment (10%)
+
+Measures whether the achievement type in the experience matches what the target role values — quantitative metrics for data-driven roles, team outcomes for collaboration-heavy roles, innovation for creative roles, and scale for hyperscale roles.
+
+| Score Range | Label | Meaning |
+|---|---|---|
+| 90–100% | Perfect alignment | Achievement type is exactly what the role values |
+| 70–89% | Strong alignment | Achievement type closely matches role priorities |
+| 50–69% | Moderate alignment | Partial match; some reframing of impact needed |
+| < 50% | Weak alignment | Achievement type does not resonate with role values |
+
+## Confidence bands
+
+Once the overall score is calculated, it is mapped to a confidence band that determines what action the skill takes:
+
+| Band | Score Range | Label | Meaning | Action |
+|---|---|---|---|---|
+| A | 90–100% | **DIRECT** | Experience is an exact or near-exact match | Use with confidence; no reframing needed |
+| B | 75–89% | **TRANSFERABLE** | Strong candidate with minor translation needed | Use; optionally adjust terminology |
+| C | 60–74% | **ADJACENT** | Acceptable fit with intentional reframing | Use with reframing; surface for checkpoint review |
+| D | 45–59% | **WEAK** | Marginal fit; may introduce risk | Consider only if no better option exists |
+| E | < 45% | **GAP** | No credible match in library | Flag as unaddressed requirement; trigger gap handling |
+
+## Reframing strategies
+
+When a match falls in the TRANSFERABLE or ADJACENT band (60–89%), the experience is a good fit but the language may not speak the target role's dialect. The skill applies one or more of the following reframing strategies before surfacing the content.
+
+<Note>
+All reframing must be truthful. These strategies adjust emphasis, terminology, and framing — they never add, invent, or exaggerate facts. The same experience is described differently, not differently invented.
+</Note>
+
+### Strategy 1: Keyword Alignment
+
+Preserve meaning; adjust terminology to match the language used in the job description or success profile.
+
+```
+Before: "Led experimental design and data analysis programs"
+
+After:  "Led data science programs combining experimental design and
+         statistical analysis"
+
+Reason: Target role uses "data science" terminology
+```
+
+### Strategy 2: Emphasis Shift
+
+Keep the same facts, but foreground the element most relevant to the target role. Useful when the experience contains both a technical method and a business outcome and the role prioritizes one over the other.
+
+```
+Before: "Designed statistical experiments... saving millions in recall costs"
+
+After:  "Prevented millions in potential recall costs through predictive
+         risk detection using statistical modeling"
+
+Reason: Target role values business outcomes over technical methods
+```
+
+### Strategy 3: Abstraction Level
+
+Adjust how technically specific the language is. This works in both directions: strip out implementation details when the role is language-agnostic, or add them when the role values technical depth.
+
+```
+Before: "Built MATLAB-based automated system for evaluation"
+
+More abstract:
+After:  "Developed automated evaluation system"
+Reason: Target role is language-agnostic; emphasize outcome
+
+More specific:
+After:  "Built automated evaluation system (MATLAB, Python integration)"
+Reason: Target role values technical specificity
+```
+
+### Strategy 4: Scale Emphasis
+
+Highlight the most relevant dimension of scale for the role. A project involving "3 stakeholders" could legitimately emphasize cross-organizational complexity rather than headcount.
+
+```
+Before: "Managed project with 3 stakeholders"
+
+After:  "Led cross-functional initiative coordinating 3 organizational units"
+
+Reason: Emphasize cross-org complexity over headcount
+```
+
+## Gap handling options
+
+When the best available match scores below 60% (WEAK or GAP band), the skill presents one of three gap handling paths rather than silently inserting a poor match.
+
+### Option 1: Reframe adjacent experience
+
+When there is adjacent content that could be legitimately reframed, the skill presents the opportunity explicitly:
+
+```
+TEMPLATE SLOT: {Requirement}
+BEST MATCH: {Experience} (Confidence: {score}%)
+
+REFRAME OPPORTUNITY:
+Original: "{bullet_text}"
+Reframed: "{adjusted_text}"
+Justification: {why this is truthful}
+
+RECOMMENDATION: Use reframed version? Y/N
+```
+
+### Option 2: Flag as gap
+
+When no match exceeds 60%, the skill surfaces all available options and defers to the user:
+
+```
+GAP IDENTIFIED: {Requirement}
+
+AVAILABLE OPTIONS:
+None with confidence >60%
+
+RECOMMENDATIONS:
+1. Address in cover letter - emphasize learning ability
+2. Omit bullet slot - reduce template allocation
+3. Include best available match ({score}%) with disclosure
+4. Discover new experience through brainstorming
+
+User decides how to proceed.
+```
+
+### Option 3: Trigger experience discovery
+
+If the Experience Discovery phase has not yet run, the skill offers a targeted branching interview for the gap area rather than immediately accepting the gap:
+
+```
+"This gap might be addressable through experience discovery.
+Would you like to do a quick branching interview about {gap_area}?"
+```
+
+If discovery has already been completed and the gap remains, the skill accepts it and moves forward, leaving the gap documented for cover letter or other follow-up.

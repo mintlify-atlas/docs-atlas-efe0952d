@@ -1,0 +1,70 @@
+---
+title: "Resume Tailoring Skill: AI-powered resume generation for Claude Code"
+sidebarTitle: "Introduction"
+description: "Resume Tailoring Skill is a Claude Code skill that researches roles, discovers your undocumented experiences, and generates confidence-scored tailored resumes from your library."
+---
+
+Resume Tailoring Skill is a Claude Code skill for anyone who has ever stared at a job description and wondered how to bridge the gap between their real experience and what the role demands. It researches the company and role, surfaces hidden experiences through a conversational discovery interview, and generates polished, multi-format resumes from your existing resume library — all while maintaining strict factual integrity. Whether you're gunning for an internal promotion, pivoting to a new industry, or navigating a career gap, this skill handles the strategic heavy lifting so you can focus on the interview.
+
+<Note>
+**Core principle:** Your ability to get a job should be based on your experiences and capabilities, not on your resume writing skills.
+</Note>
+
+## What makes it different
+
+Most resume tools do keyword stuffing. Resume Tailoring Skill does something harder: it optimizes your application without making anything up.
+
+**Truth-preserving optimization**
+
+The skill never fabricates experience. Instead it intelligently reframes and emphasizes what you actually did — shifting terminology to match the target role, adjusting the emphasis of a bullet, or highlighting the aspect of a project most relevant to the position. Every reframing is shown to you with a before/after comparison and a plain-language explanation of why it's accurate.
+
+**Branching experience discovery**
+
+Most people have valuable experiences they've never written down — volunteer work, side projects, a startup stint, a bootcamp project. The skill conducts a structured conversational interview to surface these undocumented contributions. It starts with open probes, branches based on your answers, helps you articulate what you did in resume-ready language, and integrates the best findings directly into your resume or your library for future use.
+
+**Confidence-scored content matching**
+
+Every bullet selected from your library is scored across four dimensions: direct match (40%), transferable capability (30%), adjacent relevance (20%), and impact alignment (10%). You see the score, the rationale, and the top alternative matches before any content is committed. Gaps are flagged explicitly — you'll know what's missing and get concrete options for how to handle each one, from reframing to cover letter recommendations.
+
+## When to use this skill
+
+- **Single job application** — You have a specific job description and want the strongest possible resume for that exact role. The skill walks through deep company research, template optimization, experience discovery, and multi-format output generation.
+
+- **Multiple jobs at once** — You're applying to several similar roles (e.g., Senior PM at Microsoft, Google, and AWS). Batch mode runs experience discovery once across all job descriptions, deduplicates gaps, and processes each resume individually — saving 11–27% of time compared to handling jobs sequentially.
+
+- **Career transitions** — You're moving from one domain to another (e.g., technical program management to ecology PM). The skill reframes your titles and bullets to bridge the gap, surfaces transferable skills, and provides transparent gap analysis with cover letter recommendations.
+
+- **Handling career gaps** — You took time off to start a company, care for family, or pursue other work. The skill frames these periods as legitimate experiences and surfaces the skills you developed during them rather than glossing over the gap.
+
+## When NOT to use this skill
+
+- **Cover letter generation** — This is a separate skill. The skill may recommend cover letter talking points for gap mitigation, but it does not write the letter.
+- **Generic resume from scratch** — The skill is designed to work from an existing resume library. If you have no prior resumes, start by creating at least one baseline resume in markdown format before invoking the skill.
+- **No existing resume library** — You need at least one or two resumes in markdown format as a starting point. The skill builds and enriches a library over time; it doesn't generate a first resume from a blank slate.
+
+## Prerequisites
+
+**Required:**
+- Claude Code with skills enabled
+- An existing resume library — at least 1–2 resumes saved as `.md` files (10+ gives the best results)
+
+**Optional but recommended:**
+- WebSearch capability enabled in Claude Code (used for company culture research and LinkedIn role benchmarking)
+- `document-skills` plugin (required for DOCX and PDF output; the skill falls back to markdown-only without it)
+
+---
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install the skill in two commands and verify it loads correctly in Claude Code.
+  </Card>
+  <Card title="Quickstart" icon="bolt" href="/quickstart">
+    Tailor your first resume in under 15 minutes with a step-by-step walkthrough.
+  </Card>
+  <Card title="Design Philosophy" icon="lightbulb" href="/concepts/design-philosophy">
+    Understand the truth-preserving optimization principles behind the skill.
+  </Card>
+  <Card title="Workflow Overview" icon="diagram-project" href="/concepts/workflow-overview">
+    Explore the full five-phase workflow from library build to multi-format output.
+  </Card>
+</CardGroup>

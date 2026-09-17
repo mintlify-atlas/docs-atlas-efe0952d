@@ -1,0 +1,161 @@
+---
+title: "Shared Experience Discovery: surface experiences once, apply to all roles"
+sidebarTitle: "Shared Discovery"
+description: "Phase 2 of batch mode runs a single branching interview for all deduplicated gaps, tagging each discovery with which jobs it addresses and showing real-time coverage improvement."
+---
+
+Shared experience discovery is where batch mode delivers its biggest time savings. Instead of running a separate 15-minute branching interview for each job — asking about Kubernetes three times, CI/CD three times, and cross-functional leadership three times — the skill runs one unified session that covers every unique gap identified in Phase 1. Each question arrives with full multi-job context so you can see exactly which applications benefit from your answer, and each discovery is immediately tagged with its job relevance before the conversation moves on.
+
+## How shared discovery differs from single-job discovery
+
+The underlying mechanics are identical to single-job mode. The skill uses the same branching interview patterns: an open initial probe, branches based on your answer (YES → deep dive, INDIRECT → transferability, ADJACENT → related experience, PERSONAL → recency and substance, NO → broader category or skip), and systematic follow-up questions to extract scale, metrics, and context.
+
+The two differences are:
+
+1. **Multi-job context is added to every initial probe.** Before asking about a gap, the skill shows which of your target jobs require it and how high-leverage resolving it is — so you understand why the question matters before answering.
+2. **Discoveries are tagged with job relevance.** When you describe an experience, the skill records which specific jobs it addresses and which gaps it covers, rather than treating it as a generic library addition.
+
+## Leverage classification
+
+Each gap is labeled with a leverage level at the start of its discovery question, based on how many jobs it addresses:
+
+| Leverage level | Criteria | Addressed first? |
+|---|---|---|
+| **HIGH-LEVERAGE** | Appears in 3+ jobs (critical gap) | Yes — highest priority |
+| **MEDIUM-LEVERAGE** | Appears in exactly 2 jobs (important gap) | Second |
+| **LOW-LEVERAGE** | Appears in 1 job (job-specific gap) | Last |
+
+### Multi-job context template
+
+Here is the difference between how a gap is introduced in single-job versus multi-job mode:
+
+**Single-job version:**
+```
+"I noticed the job requires Kubernetes experience. Have you worked with Kubernetes?"
+```
+
+**Multi-job version:**
+```
+"Kubernetes experience appears in 3 of your target jobs (Microsoft, Google, AWS).
+
+This is a HIGH-LEVERAGE gap - addressing it helps multiple applications.
+
+Current best match: 45% confidence ('Deployed containerized app for nonprofit')
+
+Have you worked with Kubernetes or container orchestration?"
+```
+
+The framing shifts from "this job needs X" to "answering this well improves three applications at once," which helps you decide how much detail to provide.
+
+## Discovery session flow
+
+**Step 1 — Start with highest-leverage gaps.**
+Critical gaps (appearing in 3+ jobs) are addressed first. The branching interview for each gap runs to completion before moving to the next one.
+
+**Step 2 — Use multi-job contextualized questions.**
+Each initial probe leads with the leverage label, the list of affected jobs, and your current best library match for that gap.
+
+**Step 3 — Conduct the branching interview.**
+The skill branches based on your answer using the same patterns as single-job mode — asking what, how, and why; quantifying with metrics; contextualizing (production vs. side project vs. coursework); and validating relevance before capturing.
+
+**Step 4 — Real-time coverage updates after each discovery.**
+After every confirmed experience, the skill shows updated coverage numbers across all affected jobs before asking whether to continue:
+
+```
+"Great! That addresses Kubernetes for all 3 jobs.
+
+UPDATED COVERAGE:
+- Job 1 (Microsoft): 68% → 78% (+10%)
+- Job 2 (Google): 72% → 82% (+10%)
+- Job 3 (AWS): 65% → 75% (+10%)
+
+Remaining critical gaps: 2 (down from 3)
+
+Continue with next gap? (Y/N)"
+```
+
+**Step 5 — Move through important and job-specific gaps.**
+After critical gaps are resolved, the session continues with important gaps and then job-specific gaps, each with their own leverage context.
+
+## Capturing discoveries
+
+Every confirmed experience is saved to `_discovered_experiences.md` in the batch directory and stored in `_batch_state.json`. The capture structure for each experience includes which jobs it addresses, which gaps it covers, and the confidence improvement for each gap:
+
+```json
+{
+  "experience_id": "disc-1",
+  "text": "Kubernetes CI/CD for nonprofit project",
+  "addresses_jobs": ["job-1", "job-2", "job-3"],
+  "addresses_gaps": ["Kubernetes", "CI/CD"],
+  "confidence_improvement": {
+    "Kubernetes": { "before": 45, "after": 75 },
+    "CI/CD": { "before": 58, "after": 82 }
+  },
+  "bullet_draft": "Designed and implemented Kubernetes-based CI/CD pipeline..."
+}
+```
+
+The `bullet_draft` field is a first-pass resume bullet the skill drafts during the conversation, ready for review and refinement when the experience is integrated.
+
+### End-of-session summary
+
+When all gaps have been explored, the skill reports total coverage change and remaining gaps:
+
+```
+"Discovery complete!
+
+SUMMARY:
+- New experiences captured: 5
+- Experiences integrated: 5
+- Average coverage improvement: +16%
+
+FINAL COVERAGE:
+- Job 1 (Microsoft): 68% → 85% (+17%)
+- Job 2 (Google): 72% → 88% (+16%)
+- Job 3 (AWS): 65% → 78% (+13%)
+
+Remaining gaps: 5 (down from 14)
+├─ 0 critical gaps ✓
+├─ 2 important gaps
+└─ 3 job-specific gaps"
+```
+
+## Integration decisions
+
+After the discovery session, the skill walks through each captured experience and asks how to integrate it:
+
+```
+"EXPERIENCE 1: Kubernetes CI/CD for nonprofit project
+├─ Addresses: Jobs 1, 2, 3
+└─ Options:
+   1. ADD TO LIBRARY FOR ALL JOBS - Integrate and use everywhere
+   2. ADD TO LIBRARY, USE SELECTIVELY - You pick which jobs use it
+   3. SKIP - Don't integrate
+
+Your choice for Experience 1? (1/2/3)"
+```
+
+- **Add to library for all jobs** — the experience becomes available when the skill runs content matching for every job in the batch, and it is also available for future batches and single-job sessions.
+- **Add to library, use selectively** — the experience is stored in the library, but you choose which specific jobs it is used in during per-job processing.
+- **Skip** — the experience is not integrated. The captured text remains in `_discovered_experiences.md` for your reference but does not affect resume generation.
+
+Experiences added to the library are permanently enriched with metadata: discovered date, which gaps they address, which jobs used them, and the confidence improvement they produced. This means every future session — batch or single-job — starts with a richer library.
+
+<Note>
+If a discovered experience only applies to one job despite being classified as a multi-job gap — for example, your Kubernetes work was exclusively on Azure AKS and does not translate to GKE or EKS — the skill tags it as job-specific and updates the gap status for the remaining jobs. It will then ask whether you want to keep exploring for a more broadly transferable answer:
+
+```
+"Got it — this addresses the Microsoft job (Azure AKS) but not
+Google (GKE) or AWS (EKS). I'll tag this as Microsoft-specific.
+
+Should I still explore Kubernetes more broadly? You might have
+experience with container orchestration concepts that transfer
+across cloud providers.
+
+Options:
+1. YES - Explore general container orchestration
+2. NO - Move to next gap"
+```
+
+This prevents a technically true but narrowly applicable discovery from inflating coverage estimates for jobs it does not actually help.
+</Note>

@@ -1,0 +1,209 @@
+---
+title: "Content Matching: confidence-scored resume assembly"
+sidebarTitle: "Content Matching"
+description: "Phase 3 matches library experiences to template slots using a four-factor scoring formula. Gaps are identified with transparent options for reframing or discovery."
+---
+
+Phase 3 is where your resume library meets the approved template. For every bullet slot in the template, the skill evaluates every candidate experience in your library — including anything surfaced during Experience Discovery — and assigns a confidence score using a four-factor weighted formula. The result is a complete, transparent content mapping: which experience fills each slot, how confidently it fills it, what reframing (if any) was applied, and exactly how any gaps are being handled. Nothing is assembled silently.
+
+## The four scoring dimensions
+
+Each candidate bullet is scored against the target template slot across four dimensions, then combined into a single confidence score.
+
+### Direct Match — 40%
+
+Measures how closely the experience matches the slot requirement on its own terms:
+
+- Keyword overlap with the job description and Success Profile
+- Same domain or technology mentioned explicitly
+- Same type of outcome required (e.g., cost reduction vs. revenue growth)
+- Same scale or complexity level
+
+### Transferable Skills — 30%
+
+Measures whether the same underlying capability is demonstrated, even if the context differs:
+
+- Same leadership or management skill in a different domain
+- Same technical problem-solving approach in a different stack
+- Similar scale or complexity in a different industry
+
+### Adjacent Experience — 20%
+
+Measures proximity: experiences that touched the skill as a secondary responsibility, used related tools, or operated in a related problem space even if not directly:
+
+- Supporting or enabling role in the relevant area
+- Related tools or methodologies
+- Worked near the problem space
+
+### Impact Alignment — 10%
+
+Measures whether the type of achievement matches what this role values:
+
+- Quantitative metrics if the JD emphasizes data-driven outcomes
+- Team and collaboration outcomes if the JD emphasizes cross-functional work
+- Innovation or creative problem-solving if the JD emphasizes those themes
+- Scale if the JD emphasizes hyperscale systems or large organizations
+
+### The scoring formula
+
+```
+Overall = (Direct × 0.4) + (Transferable × 0.3) + (Adjacent × 0.2) + (Impact × 0.1)
+```
+
+---
+
+## Confidence bands
+
+The overall score maps to one of five confidence bands, each with a defined interpretation:
+
+| Band | Score | Label | Meaning |
+|---|---|---|---|
+| 🟢 | 90–100% | **DIRECT** | Use with confidence — strong match on all dimensions |
+| 🟡 | 75–89% | **TRANSFERABLE** | Strong candidate — same capability, different context |
+| 🟠 | 60–74% | **ADJACENT** | Acceptable with reframing — close but not exact |
+| 🔴 | 45–59% | **WEAK** | Consider only if no better option exists |
+| ⛔ | < 45% | **GAP** | Flag as unaddressed requirement |
+
+The top three scoring candidates for each template slot are presented with a breakdown of the scoring, not just the final number. You see exactly why a bullet scored what it did.
+
+---
+
+## Content reframing strategies
+
+When a bullet scores above 60% but its language doesn't align with the target role's terminology, the skill applies one of four reframing strategies. Reframing preserves the factual substance of the original bullet — it only adjusts how that substance is expressed.
+
+### Strategy 1: Keyword Alignment
+
+Preserve meaning, adjust terminology to match the target role's vocabulary.
+
+```
+Before: "Led experimental design and data analysis programs"
+After:  "Led data science programs combining experimental design and
+         statistical analysis"
+Reason: Target role uses "data science" terminology
+```
+
+### Strategy 2: Emphasis Shift
+
+Same facts, different focus — restructure the sentence to lead with what this audience cares about.
+
+```
+Before: "Designed statistical experiments... saving millions in recall costs"
+After:  "Prevented millions in potential recall costs through predictive
+         risk detection using statistical modeling"
+Reason: Target role values business outcomes over technical methods
+```
+
+### Strategy 3: Abstraction Level
+
+Adjust how technically specific the bullet is, in either direction.
+
+```
+Before: "Built MATLAB-based automated system for evaluation"
+After:  "Developed automated evaluation system"
+Reason: Target role is language-agnostic; emphasize outcome
+
+OR
+
+After:  "Built automated evaluation system (MATLAB, Python integration)"
+Reason: Target role values technical specificity
+```
+
+### Strategy 4: Scale Emphasis
+
+Highlight the aspect of scale most relevant to the target role's definition of impact.
+
+```
+Before: "Managed project with 3 stakeholders"
+After:  "Led cross-functional initiative coordinating 3 organizational units"
+Reason: Emphasize cross-org complexity over headcount
+```
+
+All reframings are shown as explicit before/after comparisons with a written justification for why the change is truthful. Nothing is reframed without your visibility.
+
+---
+
+## Gap handling options
+
+When the best available match for a required template slot falls below 60%, the skill presents the gap explicitly and offers a structured set of options:
+
+### Option 1: Reframe adjacent experience
+
+If the best available experience is close but not quite there, the skill proposes a specific reframing and asks whether to use it:
+
+```
+TEMPLATE SLOT: {Requirement}
+BEST MATCH: {Experience} (Confidence: {score}%)
+
+REFRAME OPPORTUNITY:
+Original: "{bullet_text}"
+Reframed: "{adjusted_text}"
+Justification: {why this is truthful}
+
+RECOMMENDATION: Use reframed version? Y/N
+```
+
+### Option 2: Flag as gap
+
+If no reframing produces an honest match, the skill presents alternatives for how to handle the gap:
+
+```
+GAP IDENTIFIED: {Requirement}
+
+AVAILABLE OPTIONS:
+None with confidence > 60%
+
+RECOMMENDATIONS:
+1. Address in cover letter — emphasize learning ability
+2. Omit bullet slot — reduce template allocation
+3. Include best available match ({score}%) with disclosure
+4. Discover new experience through brainstorming
+```
+
+### Option 3: Trigger experience discovery
+
+If Phase 2.5 was skipped or didn't cover this specific gap, the skill can offer a targeted discovery session just for the unaddressed requirement:
+
+```
+This gap might be addressable through experience discovery.
+Would you like to do a quick branching interview about {gap_area}?
+```
+
+If discovery has already been run and the gap remains, the skill accepts the gap and moves forward with the best available option.
+
+---
+
+## The content matching checkpoint
+
+After all template slots are mapped, the skill presents a complete coverage summary before generation begins:
+
+```
+I've matched content to your template. Here's the complete mapping:
+
+COVERAGE SUMMARY:
+- Direct matches: {N} bullets ({percentage}%)
+- Transferable: {N} bullets ({percentage}%)
+- Adjacent: {N} bullets ({percentage}%)
+- Gaps: {N} ({percentage}%)
+
+REFRAMINGS APPLIED: {N}
+- {Example 1}
+- {Example 2}
+
+GAPS IDENTIFIED:
+- {Gap 1}: {Recommendation}
+- {Gap 2}: {Recommendation}
+
+OVERALL JD COVERAGE: {percentage}%
+
+Review the detailed mapping below. Any adjustments to:
+- Match selections?
+- Reframings?
+- Gap handling?
+```
+
+You can approve the mapping as-is, swap a specific match for an alternative the skill surfaced, reject a reframing, or change how a gap is handled — all before a single output file is generated.
+
+<Note>
+The complete content mapping is saved as `content_mapping.md` alongside your resume output files. It serves as a full audit trail of what was selected, why, what was reframed, and what gaps remain — useful for interview preparation and for understanding your application's strengths and weaknesses before you submit.
+</Note>

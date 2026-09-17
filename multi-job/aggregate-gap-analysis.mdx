@@ -1,0 +1,164 @@
+---
+title: "Aggregate Gap Analysis: unified coverage across all target roles"
+sidebarTitle: "Gap Analysis"
+description: "Phase 1 of batch mode extracts requirements from all job descriptions, matches them against your library, and deduplicates gaps across roles to guide a single efficient discovery session."
+---
+
+Aggregate gap analysis is the engine that makes shared discovery possible. Before asking you a single question, the skill reads every job description you provided, matches each requirement against your resume library, and builds a unified map of what is missing — collapsing identical gaps from multiple jobs into one entry instead of surfacing them separately per role. By the time Phase 2 begins, you have a prioritized list of unique gaps rather than a duplicated pile, and the skill can run one focused conversation that addresses all of them at once.
+
+## What aggregate gap analysis does
+
+The process runs in four steps, all automatically, before any user checkpoint.
+
+**1. Extract requirements from all JDs.**
+The skill performs a lightweight parse of each job description — enough to identify required skills, preferred technologies, and domain areas — without running the full per-job company research that happens later in Phase 3. This keeps Phase 1 fast.
+
+```
+Job 1 (Microsoft 1ES):  Kubernetes, CI/CD, cross-functional leadership, Azure
+Job 2 (Google Cloud):   Kubernetes, GCP, distributed systems, team management
+Job 3 (AWS):            Container orchestration, AWS services, program management
+```
+
+**2. Match each requirement against your resume library.**
+For every requirement across all jobs, the skill searches your library using the same confidence-scored matching strategies as single-job mode — direct match (40%), transferable (30%), adjacent (20%), and impact (10%).
+
+**3. Flag gaps where confidence is below 60%.**
+Any requirement where the best available match scores below the 60% confidence threshold is flagged as a gap. Matches above 60% are considered covered and do not appear in the discovery session.
+
+**4. Deduplicate gaps across jobs.**
+"Kubernetes at scale" appearing in all three job descriptions becomes a single gap entry, not three separate questions. The same applies to partial overlaps — "CI/CD pipeline management" in Jobs 1 and 2 merges into one important gap rather than consuming time in two separate discovery sessions.
+
+## Gap prioritization
+
+After deduplication, each gap is assigned a priority level based on how many jobs it affects:
+
+| Priority level | Criteria | Discovery time |
+|---|---|---|
+| **Critical** (priority 3) | Appears in 3 or more jobs | 5–7 minutes each |
+| **Important** (priority 2) | Appears in exactly 2 jobs | 3–5 minutes each |
+| **Job-specific** (priority 1) | Appears in 1 job only | 2–3 minutes each |
+
+Critical gaps are addressed first in Phase 2, because resolving them improves coverage across the most applications simultaneously.
+
+## The gap analysis report
+
+When Phase 1 completes, the skill generates `_aggregate_gaps.md` in your batch directory and presents a summary to you. The report includes:
+
+- **Coverage summary per job** — how much of each job description is already matched by your existing library
+- **Critical gaps section** — each gap with its current best match and confidence score
+- **Important gaps section** — two-job gaps with the same detail
+- **Job-specific gaps section** — single-job gaps that may still be worth addressing
+- **Aggregate statistics** — total gaps found before deduplication, unique gaps after
+- **Recommended discovery time estimate** — broken down by priority tier
+
+### Example report output
+
+```markdown
+# Aggregate Gap Analysis
+**Batch:** batch-2025-11-04-job-search
+**Generated:** 2025-11-04T11:00:00Z
+
+## Coverage Summary
+
+- Job 1 (Microsoft): 68% coverage, 5 gaps
+- Job 2 (Google): 72% coverage, 4 gaps
+- Job 3 (AWS): 65% coverage, 6 gaps
+
+## Critical Gaps (appear in 3+ jobs)
+
+### Kubernetes at scale
+- **Appears in:** Jobs 1, 2, 3
+- **Current best match:** 45% confidence
+- **Match source:** "Deployed containerized app for nonprofit" (2023)
+- **Gap:** No production Kubernetes management at scale
+
+### CI/CD pipeline management
+- **Appears in:** Jobs 1, 2, 3
+- **Current best match:** 58% confidence
+- **Match source:** "Set up GitHub Actions workflow" (2024)
+- **Gap:** Limited enterprise CI/CD experience
+
+## Important Gaps (appear in 2 jobs)
+
+### Cloud-native architecture
+- **Appears in:** Jobs 2, 3
+- **Current best match:** 52% confidence
+
+## Job-Specific Gaps
+
+### Azure-specific experience
+- **Appears in:** Job 1 only
+- **Current best match:** 40% confidence
+
+## Aggregate Statistics
+
+- **Total gaps:** 14
+- **Unique gaps:** 8 (after deduplication)
+- **Critical gaps:** 3
+- **Important gaps:** 4
+- **Job-specific gaps:** 1
+
+## Recommended Discovery Time
+
+- Critical gaps (3 gaps × 5–7 min): 15–20 minutes
+- Important gaps (4 gaps × 3–5 min): 12–20 minutes
+- Job-specific gaps (1 gap × 2–3 min): 2–3 minutes
+
+**Total estimated discovery time:** 30–40 minutes
+
+For 3 similar jobs, this replaces 3 × 15 min = 45 min of sequential discovery.
+```
+
+### AggregateGaps schema
+
+The same data is stored in `_batch_state.json` under the `aggregate_gaps` key for use by later phases:
+
+```json
+{
+  "critical_gaps": [
+    {
+      "gap_name": "Kubernetes at scale",
+      "appears_in_jobs": ["job-1", "job-2", "job-3"],
+      "current_best_match": 45,
+      "priority": 3
+    }
+  ],
+  "important_gaps": [
+    {
+      "gap_name": "Cloud-native architecture",
+      "appears_in_jobs": ["job-2", "job-3"],
+      "current_best_match": 52,
+      "priority": 2
+    }
+  ],
+  "job_specific_gaps": [
+    {
+      "gap_name": "Azure-specific experience",
+      "appears_in_jobs": ["job-1"],
+      "current_best_match": 40,
+      "priority": 1
+    }
+  ]
+}
+```
+
+## After gap analysis
+
+Once the report is ready, the skill presents the summary and waits for your input at a checkpoint before proceeding:
+
+```
+"Would you like to:
+1. START DISCOVERY - Address gaps through conversational discovery
+2. SKIP DISCOVERY - Proceed with current library (not recommended)
+3. REVIEW GAPS - See detailed gap analysis first
+
+Recommendation: Option 1 or 3 (review then start)"
+```
+
+- **Start Discovery** — moves directly to Phase 2 with the prioritized gap list
+- **Skip Discovery** — proceeds to per-job processing using only your existing library; coverage will be lower for gapped requirements
+- **Review Gaps** — displays the full `_aggregate_gaps.md` report so you can read through every gap before committing to the discovery session
+
+<Tip>
+Choose **Review Gaps** before starting discovery if this is your first batch or if the roles are especially important. Scanning the report in advance tells you exactly what experiences to think about during the branching interview — you will be better prepared to answer questions about Kubernetes if you have already reminded yourself of every container-related project you have worked on.
+</Tip>

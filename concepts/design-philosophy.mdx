@@ -1,0 +1,62 @@
+---
+title: "Truth-Preserving Optimization: the core design principle"
+sidebarTitle: "Design Philosophy"
+description: "Resume Tailoring Skill optimizes resumes without fabricating experience. Learn how truth-preserving optimization, holistic person focus, and user control shape every decision."
+---
+
+Every choice the Resume Tailoring Skill makes — how it reframes a bullet, which experiences it surfaces, when it pauses to ask — flows from one conviction: your ability to get a job should be based on your actual experiences and capabilities, not on how skilled you are at writing resumes. That conviction isn't just a tagline. It is the architectural constraint that makes the skill trustworthy, and the lens through which every algorithm, prompt, and checkpoint was designed.
+
+<Note>
+  **Mission:** A person's ability to get a job should be based on their experiences and capabilities, not on their resume writing skills. The skill exists to close the gap between what you have done and how clearly that comes across on paper — never to invent a story that isn't yours.
+</Note>
+
+## Truth-Preserving Optimization
+
+Truth-preserving optimization is the skill's core principle: maximize how well your resume fits a role while keeping every claim grounded in what you actually did. These two goals are not in tension — they are the point. A resume that invents experience may pass an ATS screen and still fail the moment an interviewer asks a follow-up question. A resume that is scrupulously honest but poorly framed leaves genuine value on the table. The skill pursues the third path.
+
+**Never fabricate experience.** The skill will not add a role you did not hold, a technology you did not use, or a metric you cannot defend. When a requirement cannot be matched, the gap is surfaced clearly with options — reframe an adjacent experience, address it in a cover letter, or omit the slot entirely. Hiding gaps is never an option the skill recommends.
+
+**Intelligently reframe and emphasize.** The same experience can be described in many truthful ways. A researcher who spent most of their time writing Python pipelines is also, accurately, a research software engineer. A program coordinator who managed cross-team deliverables is also, accurately, a project manager. The skill identifies which framing is most legible to a given role without crossing into misrepresentation.
+
+**Transparent about gaps.** When no bullet in your library covers a requirement at better than 60% confidence, the skill tells you — along with the confidence score, the best available option, and a concrete recommendation. You see the gap map before generation, not after submission.
+
+### Reframing in practice
+
+The skill draws on four reframing strategies from its matching engine, each of which preserves factual accuracy while improving relevance:
+
+| Strategy | What changes | What stays the same | Example |
+|---|---|---|---|
+| **Keyword Alignment** | Terminology matches the target role's language | The underlying meaning and scope | `"Led experimental design programs"` → `"Led data science programs combining experimental design and statistical analysis"` |
+| **Emphasis Shift** | The focal point of the bullet moves | All facts stated remain true | `"Designed statistical experiments… saving millions in recall costs"` → `"Prevented millions in potential recall costs through predictive risk detection using statistical modeling"` |
+| **Abstraction Level** | Technical specificity is raised or lowered | The outcome described | `"Built MATLAB-based automated system"` → `"Developed automated evaluation system"` (language-agnostic role) or `"Built automated evaluation system (MATLAB, Python integration)"` (technical role) |
+| **Scale Emphasis** | Which dimension of scale is highlighted | The actual scope of the work | `"Managed project with 3 stakeholders"` → `"Led cross-functional initiative coordinating 3 organizational units"` |
+
+Every reframing is shown to you as a before/after pair with a plain-language justification before it is applied. You can accept, adjust, or reject each one.
+
+<Tip>
+  When the skill flags a match with low confidence (below 60%), consider running the Experience Discovery phase before accepting a gap. The conversational interview often surfaces real work — side projects, volunteer roles, coursework — that your formal resume history missed. Discovering a genuine experience is always better than forcing a weak reframe.
+</Tip>
+
+## Holistic Person Focus
+
+Most resume tools operate on your résumé as a static document. The Resume Tailoring Skill operates on you as a person whose documented history is necessarily incomplete.
+
+**Surface undocumented experiences.** Formal employment captures a fraction of what most people have done. The skill's Experience Discovery phase runs a conversational, branching interview designed to pull out work that has never made it into any resume: the CI/CD pipeline you set up for a nonprofit, the environmental modeling you did in grad school, the product you built and shipped while between jobs. These are real experiences. They count.
+
+**Value volunteer work, side projects, and learning.** If you deployed a production application as a personal project, that is production deployment experience. If you coordinated a volunteer program across three organizations, that is cross-functional coordination experience. The skill does not apply a formal-employment filter when assessing what qualifies as evidence.
+
+**Build around your complete background, not just your job titles.** The skill's library model accumulates everything — bullets from every resume you provide, experiences discovered in previous sessions, reframings that worked well for past applications. Over time, the skill's picture of your background grows richer and its matches grow more precise. A gap in your first session may be filled by a discovery in your second.
+
+## User Control at Every Step
+
+The skill is opinionated about what makes a strong resume, but it never overrides your judgment. Two formal checkpoints and several inline decision points ensure you remain in control of every substantive choice.
+
+**Checkpoints at key decisions.** The skill pauses at two moments before generating anything:
+
+1. **Template Approval (Phase 2):** After researching the role and analyzing your library, the skill proposes a resume structure — section order, role consolidation decisions, title reframings, and bullet allocations — and explains the reasoning behind each choice. You can approve the structure as-is, adjust individual elements, or ask for alternatives before a single bullet is matched.
+
+2. **Content Mapping Approval (Phase 3):** After matching your experience to the approved template, the skill presents a complete bullet-by-bullet coverage summary: confidence scores for every slot, all reframings applied, all gaps identified, and the recommended handling for each. You review the full map before any file is generated.
+
+**Options, not mandates.** At both checkpoints, and throughout the discovery phase, the skill presents choices rather than faits accomplis. Role consolidation decisions offer Option A and Option B with rationales. Gap handling presents four concrete paths. Integration of newly discovered experiences asks you to decide — for each one — whether to add it to the current resume, save it to the library only, refine it further, or discard it.
+
+**You can adjust or go back.** Every checkpoint allows you to return to a prior phase. If the content mapping reveals that the template structure was wrong, you go back to Phase 2. If generation produces something that needs revision, you stay in the loop until it is right. The skill does not force forward progress.

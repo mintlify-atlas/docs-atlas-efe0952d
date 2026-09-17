@@ -1,0 +1,238 @@
+---
+title: "Data Schemas: batch state, job, and discovery structures"
+sidebarTitle: "Data Schemas"
+description: "JSON schemas for BatchState, JobState, DiscoveredExperience, AggregateGaps, and GapItem — the data structures that track multi-job batch progress and enable pause/resume."
+---
+
+Multi-job batch processing requires durable state that survives session interruptions, supports incremental job additions, and provides a transparent audit trail of what was discovered and where. All of that state lives in a batch directory under `resumes/batches/` as a combination of JSON state files and Markdown reports. This page documents every field in every schema so you understand exactly what the skill is tracking — and why.
+
+<Note>
+These files are managed automatically by the skill. You should not edit them directly. They are used for pause/resume, incremental batch additions, and coverage reporting. Reading them for debugging is fine; writing to them manually may cause unexpected behavior.
+</Note>
+
+## File structure
+
+Each batch occupies its own directory. The root of the batch contains shared state files written once and updated throughout the session; each job gets its own subdirectory containing per-job artifacts.
+
+```
+resumes/batches/batch-{YYYY-MM-DD}-{slug}/
+├── _batch_state.json           ← Primary state file (all schemas live here)
+├── _aggregate_gaps.md          ← Gap analysis report (human-readable)
+├── _discovered_experiences.md  ← Discovery session output (human-readable)
+├── _batch_summary.md           ← Final batch summary (human-readable)
+├── job-1-{company-slug}/
+│   ├── success_profile.md      ← Research output for this job
+│   ├── template.md             ← Approved resume structure
+│   ├── content_mapping.md      ← Confidence-scored content assignments
+│   └── (resume files)          ← Final MD, DOCX, PDF, and report
+└── job-2-{company-slug}/
+    └── (same structure)
+```
+
+## BatchState schema
+
+The `BatchState` object is the root of `_batch_state.json`. It holds top-level batch metadata and contains arrays of all job states, discovered experiences, and aggregate gaps.
+
+```json
+{
+  "batch_id": "batch-YYYY-MM-DD-{slug}",
+  "created": "ISO 8601 timestamp",
+  "current_phase": "intake|gap_analysis|discovery|per_job_processing|finalization",
+  "processing_mode": "interactive|express",
+  "jobs": [JobState],
+  "discoveries": [DiscoveredExperience],
+  "aggregate_gaps": AggregateGaps
+}
+```
+
+**`current_phase` values:**
+
+| Value | When it is set |
+|---|---|
+| `intake` | Initial job collection; batch just initialized |
+| `gap_analysis` | Aggregate gap analysis across all jobs is running or complete |
+| `discovery` | Shared experience discovery session is running or complete |
+| `per_job_processing` | Individual jobs are being researched, templated, matched, and generated |
+| `finalization` | All jobs processed; batch review and library update in progress |
+
+**`processing_mode` values:**
+
+| Value | Behavior |
+|---|---|
+| `interactive` | Checkpoints shown for template approval and content mapping approval for each job |
+| `express` | Skill auto-approves using best judgment; user reviews all final resumes together at the end |
+
+## JobState schema
+
+Each entry in the `jobs` array is a `JobState` object tracking one job application from intake through file generation.
+
+```json
+{
+  "job_id": "job-{N}",
+  "company": "string",
+  "role": "string",
+  "jd_text": "string",
+  "jd_url": "string|null",
+  "priority": "high|medium|low",
+  "notes": "string",
+  "status": "pending|in_progress|completed|failed",
+  "current_phase": "research|template|matching|generation|null",
+  "coverage": "number (0-100)",
+  "files_generated": "boolean",
+  "requirements": ["string"],
+  "gaps": [GapItem]
+}
+```
+
+**Lifecycle states:**
+
+```
+pending → in_progress → completed
+                     ↘
+                      failed
+```
+
+A job begins as `pending` when added to the batch. It moves to `in_progress` when per-job processing starts, then to `completed` when all files are generated. If a non-recoverable error occurs, it moves to `failed` and the batch continues with remaining jobs.
+
+**Phase progression within `in_progress`:**
+
+| Phase | What happens |
+|---|---|
+| `research` | Company and role research; success profile generated |
+| `template` | Resume structure, role consolidation, title reframing, bullet allocation |
+| `matching` | Content matched from library to template slots with confidence scoring |
+| `generation` | Markdown, DOCX, PDF, and interview report files written to disk |
+
+**Key fields:**
+
+<ParamField path="job_id" type="string" required>
+  Unique identifier within the batch. Assigned sequentially: `job-1`, `job-2`, etc. Used to cross-reference gaps, discoveries, and coverage improvements throughout the batch.
+</ParamField>
+
+<ParamField path="company" type="string" required>
+  Company name. Extracted from the job description if possible; otherwise collected from the user during intake.
+</ParamField>
+
+<ParamField path="role" type="string" required>
+  Job title. Extracted from the job description if possible; otherwise collected from the user during intake.
+</ParamField>
+
+<ParamField path="status" type="string" required>
+  Current lifecycle state: `pending`, `in_progress`, `completed`, or `failed`. Used to determine which jobs to skip when resuming an interrupted batch.
+</ParamField>
+
+<ParamField path="current_phase" type="string">
+  Active processing phase within `in_progress`. Set to `null` when status is `pending`, `completed`, or `failed`. Used for precise resume-from-interruption.
+</ParamField>
+
+<ParamField path="coverage" type="number">
+  JD coverage percentage (0–100) calculated after the matching phase. Represents the proportion of job requirements addressed by selected resume content.
+</ParamField>
+
+<ParamField path="files_generated" type="boolean">
+  Set to `true` after all output files (MD, DOCX, report) are written. Used to prevent re-generation when resuming a batch.
+</ParamField>
+
+## DiscoveredExperience schema
+
+Each entry in the `discoveries` array represents one experience surfaced during the discovery session. It records the raw experience, the bullet draft, which jobs and gaps it addresses, and the confidence improvement it provides.
+
+```json
+{
+  "experience_id": "disc-{N}",
+  "text": "string",
+  "context": "string",
+  "scope": "string",
+  "addresses_jobs": ["job-id"],
+  "addresses_gaps": ["string"],
+  "confidence_improvement": {
+    "gap_name": {
+      "before": "number",
+      "after": "number"
+    }
+  },
+  "integrated": "boolean",
+  "bullet_draft": "string"
+}
+```
+
+The `confidence_improvement` object maps each gap name to its before/after confidence scores. For example, a Kubernetes experience discovered during the session might show:
+
+```json
+"confidence_improvement": {
+  "Kubernetes at scale": { "before": 45, "after": 75 },
+  "CI/CD pipeline management": { "before": 58, "after": 82 }
+}
+```
+
+The `integrated` flag is set to `true` after the user approves the experience and it is added to the resume library. Experiences the user declines remain in the file as a record but are not included in any resume.
+
+## AggregateGaps schema
+
+The `aggregate_gaps` object is the deduplication layer that makes multi-job batch processing efficient. It groups all gaps across all jobs into three priority tiers and records which jobs share each gap — enabling the discovery session to address common gaps once rather than once per job.
+
+```json
+{
+  "critical_gaps": [
+    {
+      "gap_name": "string",
+      "appears_in_jobs": ["job-id"],
+      "current_best_match": "number (0-100)",
+      "priority": "number"
+    }
+  ],
+  "important_gaps": [...],
+  "job_specific_gaps": [...]
+}
+```
+
+Each nested array contains `GapItem` objects with the same structure. The `priority` field uses a numeric scale:
+
+| Value | Tier | Condition |
+|---|---|---|
+| `3` | Critical | Gap appears in 3 or more jobs |
+| `2` | Important | Gap appears in exactly 2 jobs |
+| `1` | Job-specific | Gap appears in only 1 job |
+
+## GapItem schema
+
+`GapItem` objects appear both in the per-job `gaps` array inside `JobState` and inside the `AggregateGaps` tier arrays. They record the specific requirement, the current confidence score for the best available match, and the gap severity.
+
+```json
+{
+  "requirement": "string",
+  "confidence": "number (0-100)",
+  "gap_type": "critical|important|specific"
+}
+```
+
+## Complete `_batch_state.json` example
+
+The following shows an initialized batch state immediately after the intake phase completes — jobs are registered with their requirements, and the aggregate gaps object is an empty placeholder awaiting gap analysis.
+
+```json
+{
+  "batch_id": "batch-2025-11-04-job-search",
+  "created": "2025-11-04T10:30:00Z",
+  "current_phase": "intake",
+  "processing_mode": "interactive",
+  "jobs": [
+    {
+      "job_id": "job-1",
+      "company": "Microsoft",
+      "role": "Principal PM - 1ES",
+      "jd_text": "...",
+      "jd_url": "https://...",
+      "priority": "high",
+      "notes": "Internal referral from Alice",
+      "status": "pending",
+      "requirements": ["Kubernetes", "CI/CD", "Leadership"],
+      "gaps": []
+    }
+  ],
+  "discoveries": [],
+  "aggregate_gaps": {}
+}
+```
+
+After gap analysis, `current_phase` advances to `gap_analysis` and `aggregate_gaps` is populated. After discovery, `current_phase` advances to `discovery` and the `discoveries` array is filled. Each job's `status` and `current_phase` update in real time as per-job processing proceeds.

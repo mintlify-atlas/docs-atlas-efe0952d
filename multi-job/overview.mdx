@@ -1,0 +1,141 @@
+---
+title: "Multi-Job Batch Mode: process 3–5 roles in one session"
+sidebarTitle: "Overview"
+description: "Multi-job batch mode shares experience discovery across similar roles, saving 11–27% of total processing time while delivering the same quality as single-job mode."
+---
+
+Multi-job batch mode lets you apply to 3–5 similar roles in a single Claude Code session by running experience discovery once and reusing those findings across every application. Instead of answering the same branching interview questions three to five times in a row, you answer them once — and the skill intelligently distributes what it learns to each job. The result is the same research depth and resume quality you get from single-job mode, delivered faster and with a shared set of discovered experiences that keeps growing every time you run a batch.
+
+## When to use batch mode
+
+Batch mode is designed for situations where your underlying experience story overlaps heavily across the roles you are targeting:
+
+- **3–5 similar roles with 60%+ requirement overlap.** Cloud infrastructure PM, Senior TPM, and Platform Engineering Manager all lean on the same Kubernetes, CI/CD, and cross-functional leadership background. The more their requirements share common ground, the more discovery work the skill can consolidate.
+- **Applying to multiple jobs in the same week.** If you are actively job-searching and have a handful of applications due soon, batch mode lets you process them in a single focused session rather than returning to Claude Code for each one individually.
+- **Career transitions where the same undocumented experiences apply broadly.** When you are pivoting domains — say, from TPM to sustainability PM — the transferable stories you uncover tend to be relevant everywhere. Discovering them once and tagging them to every target role is far more efficient than rediscovering them job by job.
+
+<Note>
+Batch mode works best when your target jobs have **60%+ requirement overlap**. If the skill detects that job diversity is too high — for example, a mix of TPM, Data Scientist, and Product Marketing roles — it will warn you and suggest splitting into smaller, more focused batches.
+</Note>
+
+## Time savings
+
+The efficiency gains come from a single source: **experience discovery is shared across all jobs, so the skill asks about each gap once instead of once per role**.
+
+| Scenario | Batch mode | Sequential | Savings |
+|---|---|---|---|
+| 3 similar jobs | ~40 min | ~45 min | ~11% |
+| 5 similar jobs | ~55 min | ~75 min | ~27% |
+
+In sequential mode, a 15-minute discovery session runs separately for each job. In batch mode, one 30–40 minute session covers all deduplicated gaps across every role. Per-job processing — research, template generation, content matching, and file generation — runs at the same depth as single-job mode; only discovery is consolidated.
+
+## Batch mode phases
+
+Batch mode is organized into five phases. Each phase has its own dedicated page with full implementation details.
+
+**Phase 0 — Job Intake & Batch Initialization**
+Collect all job descriptions, assign job IDs, initialize the batch directory, and run library initialization once for the entire batch.
+
+**Phase 1 — Aggregate Gap Analysis**
+Extract requirements from all job descriptions, match them against your resume library, and deduplicate gaps across roles so the discovery session targets only unique, high-priority gaps. [→ Gap Analysis](/multi-job/aggregate-gap-analysis)
+
+**Phase 2 — Shared Experience Discovery**
+Run a single branching interview that covers all deduplicated gaps, tagging each discovery with the jobs it addresses and showing real-time coverage improvement after every answer. [→ Shared Discovery](/multi-job/shared-discovery)
+
+**Phase 3 — Per-Job Processing**
+Run full research, template generation, content matching, and resume generation for each job independently, drawing from the enriched shared library. [→ Per-Job Processing](/multi-job/per-job-processing)
+
+**Phase 4 — Batch Finalization**
+Present all resumes together for review, with options to approve all, review individually, revise across the batch, or save without updating the library.
+
+## Activating batch mode
+
+### Invocation example
+
+Provide all job descriptions in a single message:
+
+```
+"I want to apply for these 3 roles:
+1. Microsoft - Principal PM (1ES): [paste JD or URL]
+2. Google Cloud - Senior TPM: [paste JD or URL]
+3. AWS - Senior PM (Container Services): [paste JD or URL]"
+```
+
+### Detection triggers
+
+The skill detects multi-job intent automatically when your input contains:
+
+- **Multiple URLs** — two or more job posting URLs separated by commas or newlines
+- **Explicit phrases** — "multiple jobs", "several positions", "batch of 3", "5 jobs", "batch mode"
+- **Multiple company/role mentions** — "Microsoft PM, Google TPM, AWS PM"
+
+When multi-job intent is detected, the skill asks for confirmation before starting:
+
+```
+"I see you have multiple job applications. Would you like to use
+multi-job mode?
+
+BENEFITS:
+- Shared experience discovery (faster - ask questions once for all jobs)
+- Batch processing with progress tracking
+- Incremental additions (add more jobs later)
+
+TIME COMPARISON (3 similar jobs):
+- Sequential single-job: ~45 minutes (15 min × 3)
+- Multi-job mode: ~40 minutes (15 min discovery + 8 min per job)
+
+Use multi-job mode? (Y/N)"
+```
+
+If you say **N**, or if the skill detects a single job, the standard single-job workflow runs unchanged.
+
+## Processing modes
+
+### Interactive
+
+The skill pauses at checkpoints for each job's template structure and content mapping, showing you the proposed resume structure, title reframings, and bullet assignments before proceeding. You can approve, adjust, or provide feedback at each step.
+
+Use Interactive mode when you want full visibility into every tailoring decision — especially for high-priority applications where you have strong opinions about positioning.
+
+### Express
+
+The skill auto-approves templates and content matching using its best judgment and presents all final resumes together at the end for a batch review. No per-job checkpoints interrupt the flow.
+
+Use Express mode when you want to move quickly and prefer to review finished output rather than intermediate decisions.
+
+**Recommendation:** Run your first one or two jobs in Interactive mode to see how the skill handles your background and the target roles. Once you are confident in its judgment, switch to Express for the remaining jobs.
+
+You can switch modes mid-batch — the skill will ask your preference at the start of each job in Interactive mode, or you can explicitly say "switch to Express" or "switch to Interactive" at any point.
+
+## Pause and resume
+
+Batch state is automatically saved after every major milestone — gap analysis completion, discovery session completion, and each individual job completion. If your session ends unexpectedly, or you simply need to step away, nothing is lost.
+
+To resume a paused batch:
+
+```
+"resume batch batch-2025-11-04-job-search"
+```
+
+or simply:
+
+```
+"continue my batch"
+```
+
+The skill loads the saved state from `_batch_state.json` in your batch directory and picks up exactly where you left off — whether that is mid-discovery, mid-processing, or at the finalization review.
+
+<CardGroup cols={2}>
+  <Card title="Gap Analysis" icon="magnifying-glass" href="/multi-job/aggregate-gap-analysis">
+    How the skill extracts, deduplicates, and prioritizes gaps across all job descriptions before discovery begins.
+  </Card>
+  <Card title="Shared Discovery" icon="comments" href="/multi-job/shared-discovery">
+    How the branching interview runs with multi-job context, and how discoveries are tagged to specific roles.
+  </Card>
+  <Card title="Per-Job Processing" icon="briefcase" href="/multi-job/per-job-processing">
+    Full research, template generation, matching, and output generation for each role using the enriched library.
+  </Card>
+  <Card title="Incremental Batches" icon="circle-plus" href="/multi-job/incremental-batches">
+    Add new jobs to a completed batch without re-running discovery — only new gaps are surfaced.
+  </Card>
+</CardGroup>
