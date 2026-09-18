@@ -1,7 +1,7 @@
 ---
 title: "Per-Job Processing: research and tailoring for each role"
 sidebarTitle: "Per-Job Processing"
-description: "Phase 3 of batch mode runs full research, template generation, content matching, and output generation for each job independently, using the enriched shared library."
+description: "Phase 3 of batch mode runs research, template generation, matching, and output generation independently for each job using the enriched shared library."
 ---
 
 Per-job processing is where batch mode converges with single-job quality. After shared discovery has enriched your resume library with newly surfaced experiences, the skill processes each job independently — company research, success profile synthesis, template generation, content matching, and full output generation — at exactly the same depth as if you had submitted each job description on its own. The only thing shared across jobs is the library. Every tailoring decision is made fresh for each role.
@@ -26,7 +26,7 @@ You choose a processing mode before Phase 3 begins — or per job if you prefer 
 The skill presents a checkpoint for the template structure and a second checkpoint for the content mapping before generating output. At each checkpoint you can approve, adjust, or provide feedback.
 
 **Template checkpoint:**
-```
+```text
 "Here's the optimized resume structure for {Company} - {Role}:
 
 STRUCTURE:
@@ -45,7 +45,7 @@ Approve? (Y/N/adjust)"
 ```
 
 **Content mapping checkpoint:**
-```
+```text
 "Content matched for {Company} - {Role}:
 
 COVERAGE SUMMARY:
@@ -69,7 +69,7 @@ The skill auto-approves templates and content matching using its best judgment, 
 
 You can switch between modes at any point by telling the skill explicitly:
 
-```
+```text
 "switch to Express for the remaining jobs"
 "switch back to Interactive for Job 3"
 ```
@@ -82,7 +82,7 @@ Use **Interactive mode** for the jobs you are most excited about — your top-pr
 
 Each job's files are saved to a dedicated subdirectory:
 
-```
+```text
 resumes/batches/batch-2025-11-04-job-search/
 ├── _batch_state.json
 ├── _aggregate_gaps.md
@@ -107,7 +107,7 @@ Output files follow the naming convention `{Name}_{Company}_{Role}_Resume.md`, `
 
 After each job completes, the skill reports a summary and asks whether to continue:
 
-```
+```text
 "✓ Job 2/3 complete: Google Cloud - Senior TPM
 
 QUALITY METRICS:
@@ -127,7 +127,7 @@ If you pause, the batch state is saved immediately and you can resume at any tim
 
 If research fails for a job — for example, an early-stage startup with minimal online presence — the skill does not block the rest of the batch. Instead it falls back to JD-only analysis for that job and presents options:
 
-```
+```text
 "⚠️ Limited research data for Job 3 (StartupXYZ):
 - No company website or information found
 - No LinkedIn profiles for similar roles
@@ -151,14 +151,14 @@ The remaining jobs in the batch continue processing regardless of which option y
 The skill tracks each job's lifecycle through two dimensions in `_batch_state.json`:
 
 **Status transitions:**
-```
+```text
 pending → in_progress → completed
                      ↓
                    failed
 ```
 
 **Phase progression within `in_progress`:**
-```
+```text
 research → template → matching → generation
 ```
 

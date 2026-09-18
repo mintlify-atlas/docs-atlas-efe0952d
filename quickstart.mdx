@@ -1,7 +1,7 @@
 ---
-title: "Get started with Resume Tailoring Skill"
+title: "Quickstart: Tailor Your First Resume with Claude Code"
 sidebarTitle: "Quickstart"
-description: "Tailor your first resume in under 15 minutes. Provide a job description, answer a few questions, and receive a polished multi-format resume optimized for the role."
+description: "Walk through a complete resume tailoring session: provide a job description, complete experience discovery, and generate a polished multi-format resume."
 ---
 
 Resume Tailoring Skill takes a job description and your existing resume library and walks you through a structured, checkpoint-driven process that ends with a polished, confidence-scored resume in markdown, DOCX, and PDF formats — plus an interview prep report. The whole flow typically takes 15–45 minutes depending on library size and how much experience discovery you want to do.
@@ -32,7 +32,7 @@ Resume Tailoring Skill takes a job description and your existing resume library 
 
     Then add your resumes:
 
-    ```
+    ```text
     ~/resumes/
     ├── Resume_Company1_Role1.md
     ├── Resume_Company2_Role2.md
@@ -49,13 +49,13 @@ Resume Tailoring Skill takes a job description and your existing resume library 
   <Step title="Open Claude Code and invoke the skill">
     Open Claude Code and paste your job description with a simple natural-language prompt:
 
-    ```
+    ```text
     I want to apply for [Role] at [Company]. Here's the JD: [paste job description]
     ```
 
     For example:
 
-    ```
+    ```text
     I want to apply for Principal PM role in 1ES team at Microsoft.
     Here's the JD: [paste]
     ```
@@ -68,7 +68,7 @@ Resume Tailoring Skill takes a job description and your existing resume library 
 
     You'll see a progress message like:
 
-    ```
+    ```text
     Building resume library... found 29 resumes
     ```
 
@@ -80,7 +80,7 @@ Resume Tailoring Skill takes a job description and your existing resume library 
 
     The skill then pauses and presents its findings:
 
-    ```
+    ```text
     Based on my research, here's what makes candidates successful for this role:
 
     [SUCCESS_PROFILE_SUMMARY]
@@ -100,7 +100,7 @@ Resume Tailoring Skill takes a job description and your existing resume library 
 
     For each reframing, you'll see options with rationale:
 
-    ```
+    ```text
     TITLE OPTIONS for [Company]:
       A: "Technical Program Manager" (original)
       B: "Program Manager, Environmental Systems" (emphasizes domain fit)
@@ -115,7 +115,7 @@ Resume Tailoring Skill takes a job description and your existing resume library 
   <Step title="Optional: Complete the branching experience discovery interview">
     After template approval, if the skill identifies gaps or weak matches, it offers an optional **Experience Discovery** session:
 
-    ```
+    ```text
     I've identified 4 gaps where we have weak matches:
     - Kubernetes/container orchestration: 45% confidence
     - Cross-functional team leadership at scale: 52% confidence
@@ -137,7 +137,7 @@ Resume Tailoring Skill takes a job description and your existing resume library 
 
     The skill pauses with a full coverage summary:
 
-    ```
+    ```text
     COVERAGE SUMMARY:
     - Direct matches: 18 bullets (75%)
     - Transferable:    4 bullets (17%)
@@ -178,7 +178,7 @@ Resume Tailoring Skill takes a job description and your existing resume library 
 
 Applying for a promotion or lateral move within your current company:
 
-```
+```text
 I want to apply for Principal PM role in 1ES team at Microsoft.
 Here's the JD: [paste]
 ```
@@ -189,7 +189,7 @@ The skill features your most relevant internal experience, uses internal termino
 
 Bridging from one domain to another:
 
-```
+```text
 I'm a TPM transitioning to an ecology PM role. Here's the JD: [paste]
 ```
 
@@ -199,7 +199,7 @@ The skill reframes titles (e.g., "Technical Program Manager" → "Program Manage
 
 Turning a gap into a strength:
 
-```
+```text
 I have a 2-year gap from starting a company. Here's the JD: [paste]
 ```
 
@@ -209,7 +209,7 @@ The skill includes the startup as a legitimate role, surfaces skills developed d
 
 For batch applications to similar roles, see the [Multi-Job Overview](/multi-job/overview). A quick example:
 
-```
+```text
 I want to apply for these 3 TPM roles:
 1. Microsoft 1ES - Principal PM: [JD or URL]
 2. Google Cloud - Senior TPM: [JD or URL]

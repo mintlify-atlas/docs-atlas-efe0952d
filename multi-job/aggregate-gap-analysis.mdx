@@ -1,7 +1,7 @@
 ---
-title: "Aggregate Gap Analysis: unified coverage across all target roles"
+title: "Aggregate Gap Analysis: deduplicate gaps across jobs"
 sidebarTitle: "Gap Analysis"
-description: "Phase 1 of batch mode extracts requirements from all job descriptions, matches them against your library, and deduplicates gaps across roles to guide a single efficient discovery session."
+description: "Phase 1 of batch mode extracts requirements from all JDs, matches them against your library, and deduplicates gaps before the discovery session."
 ---
 
 Aggregate gap analysis is the engine that makes shared discovery possible. Before asking you a single question, the skill reads every job description you provided, matches each requirement against your resume library, and builds a unified map of what is missing — collapsing identical gaps from multiple jobs into one entry instead of surfacing them separately per role. By the time Phase 2 begins, you have a prioritized list of unique gaps rather than a duplicated pile, and the skill can run one focused conversation that addresses all of them at once.
@@ -13,7 +13,7 @@ The process runs in four steps, all automatically, before any user checkpoint.
 **1. Extract requirements from all JDs.**
 The skill performs a lightweight parse of each job description — enough to identify required skills, preferred technologies, and domain areas — without running the full per-job company research that happens later in Phase 3. This keeps Phase 1 fast.
 
-```
+```text
 Job 1 (Microsoft 1ES):  Kubernetes, CI/CD, cross-functional leadership, Azure
 Job 2 (Google Cloud):   Kubernetes, GCP, distributed systems, team management
 Job 3 (AWS):            Container orchestration, AWS services, program management
@@ -146,7 +146,7 @@ The same data is stored in `_batch_state.json` under the `aggregate_gaps` key fo
 
 Once the report is ready, the skill presents the summary and waits for your input at a checkpoint before proceeding:
 
-```
+```text
 "Would you like to:
 1. START DISCOVERY - Address gaps through conversational discovery
 2. SKIP DISCOVERY - Proceed with current library (not recommended)

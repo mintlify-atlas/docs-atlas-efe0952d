@@ -1,7 +1,7 @@
 ---
 title: "Incremental Batches: add new jobs to a completed batch"
 sidebarTitle: "Incremental Batches"
-description: "Extend a completed batch by adding new jobs without re-running discovery. The skill detects which gaps are already covered and runs a short incremental discovery session for new gaps only."
+description: "Extend a completed batch by adding new jobs. Gaps already covered are skipped; the skill runs a short incremental discovery session for any new gaps only."
 ---
 
 You process three jobs on Monday, complete the batch, and feel good about your applications. Then on Friday you spot two more roles at Stripe and Meta that are a strong fit. Starting a brand-new batch from scratch would mean rediscovering all the same experiences you already surfaced — answering the same Kubernetes and CI/CD questions you answered days ago. Incremental batches eliminate that rework. The skill loads your completed batch, sees that five experiences were already discovered, checks which of the new jobs' gaps are already covered, and only asks about what is genuinely new.
@@ -16,15 +16,15 @@ You process three jobs on Monday, complete the batch, and feel good about your a
 
 Tell the skill about the new jobs in natural language — no special syntax required:
 
-```
+```text
 "Add another job to my batch"
 ```
 
-```
+```text
 "I found 2 more jobs at Stripe and Meta. Add them to my batch?"
 ```
 
-```
+```text
 "Resume batch batch-2025-11-04-job-search and add jobs"
 ```
 
@@ -41,7 +41,7 @@ When you trigger an incremental batch, the skill:
 
 Previously discovered experiences are never re-asked. The skill explicitly shows what is already covered versus what is new:
 
-```
+```text
 "Running incremental gap analysis for new jobs...
 
 NEW JOBS:
@@ -103,7 +103,7 @@ The time saved versus starting a fresh 5-job batch: approximately 20 minutes, by
 
 New jobs are added to the same batch directory under their own subdirectories, continuing the job numbering from where the original batch left off:
 
-```
+```text
 resumes/batches/batch-2025-11-04-job-search/
 ├── _batch_state.json          ← updated with jobs 4, 5 and new discoveries
 ├── _aggregate_gaps.md         ← from original batch

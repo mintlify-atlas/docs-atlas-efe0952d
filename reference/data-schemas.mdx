@@ -1,7 +1,7 @@
 ---
 title: "Data Schemas: batch state, job, and discovery structures"
 sidebarTitle: "Data Schemas"
-description: "JSON schemas for BatchState, JobState, DiscoveredExperience, AggregateGaps, and GapItem — the data structures that track multi-job batch progress and enable pause/resume."
+description: "Reference for BatchState, JobState, DiscoveredExperience, AggregateGaps, and GapItem schemas that track multi-job batch progress and support pause/resume."
 ---
 
 Multi-job batch processing requires durable state that survives session interruptions, supports incremental job additions, and provides a transparent audit trail of what was discovered and where. All of that state lives in a batch directory under `resumes/batches/` as a combination of JSON state files and Markdown reports. This page documents every field in every schema so you understand exactly what the skill is tracking — and why.
@@ -105,33 +105,16 @@ A job begins as `pending` when added to the batch. It moves to `in_progress` whe
 
 **Key fields:**
 
-<ParamField path="job_id" type="string" required>
-  Unique identifier within the batch. Assigned sequentially: `job-1`, `job-2`, etc. Used to cross-reference gaps, discoveries, and coverage improvements throughout the batch.
-</ParamField>
-
-<ParamField path="company" type="string" required>
-  Company name. Extracted from the job description if possible; otherwise collected from the user during intake.
-</ParamField>
-
-<ParamField path="role" type="string" required>
-  Job title. Extracted from the job description if possible; otherwise collected from the user during intake.
-</ParamField>
-
-<ParamField path="status" type="string" required>
-  Current lifecycle state: `pending`, `in_progress`, `completed`, or `failed`. Used to determine which jobs to skip when resuming an interrupted batch.
-</ParamField>
-
-<ParamField path="current_phase" type="string">
-  Active processing phase within `in_progress`. Set to `null` when status is `pending`, `completed`, or `failed`. Used for precise resume-from-interruption.
-</ParamField>
-
-<ParamField path="coverage" type="number">
-  JD coverage percentage (0–100) calculated after the matching phase. Represents the proportion of job requirements addressed by selected resume content.
-</ParamField>
-
-<ParamField path="files_generated" type="boolean">
-  Set to `true` after all output files (MD, DOCX, report) are written. Used to prevent re-generation when resuming a batch.
-</ParamField>
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `job_id` | string | yes | Unique identifier within the batch. Assigned sequentially: `job-1`, `job-2`, etc. Used to cross-reference gaps, discoveries, and coverage improvements throughout the batch. |
+| `company` | string | yes | Company name. Extracted from the job description if possible; otherwise collected from the user during intake. |
+| `role` | string | yes | Job title. Extracted from the job description if possible; otherwise collected from the user during intake. |
+| `jd_text` | string | yes | Full job description text used for requirement extraction and matching. |
+| `status` | string | yes | Current lifecycle state: `pending`, `in_progress`, `completed`, or `failed`. Used to determine which jobs to skip when resuming an interrupted batch. |
+| `current_phase` | string | no | Active processing phase within `in_progress`. Set to `null` when status is `pending`, `completed`, or `failed`. Used for precise resume-from-interruption. |
+| `coverage` | number | no | JD coverage percentage (0–100) calculated after the matching phase. Represents the proportion of job requirements addressed by selected resume content. |
+| `files_generated` | boolean | no | Set to `true` after all output files (MD, DOCX, report) are written. Used to prevent re-generation when resuming a batch. |
 
 ## DiscoveredExperience schema
 

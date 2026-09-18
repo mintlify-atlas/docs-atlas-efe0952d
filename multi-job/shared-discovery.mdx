@@ -1,7 +1,7 @@
 ---
-title: "Shared Experience Discovery: surface experiences once, apply to all roles"
+title: "Shared Discovery: one branching interview covers all jobs"
 sidebarTitle: "Shared Discovery"
-description: "Phase 2 of batch mode runs a single branching interview for all deduplicated gaps, tagging each discovery with which jobs it addresses and showing real-time coverage improvement."
+description: "Phase 2 runs one branching interview for all gaps, tags each discovery with the jobs it helps, and shows real-time coverage improvement after every answer."
 ---
 
 Shared experience discovery is where batch mode delivers its biggest time savings. Instead of running a separate 15-minute branching interview for each job — asking about Kubernetes three times, CI/CD three times, and cross-functional leadership three times — the skill runs one unified session that covers every unique gap identified in Phase 1. Each question arrives with full multi-job context so you can see exactly which applications benefit from your answer, and each discovery is immediately tagged with its job relevance before the conversation moves on.
@@ -30,12 +30,12 @@ Each gap is labeled with a leverage level at the start of its discovery question
 Here is the difference between how a gap is introduced in single-job versus multi-job mode:
 
 **Single-job version:**
-```
+```text
 "I noticed the job requires Kubernetes experience. Have you worked with Kubernetes?"
 ```
 
 **Multi-job version:**
-```
+```text
 "Kubernetes experience appears in 3 of your target jobs (Microsoft, Google, AWS).
 
 This is a HIGH-LEVERAGE gap - addressing it helps multiple applications.
@@ -61,7 +61,7 @@ The skill branches based on your answer using the same patterns as single-job mo
 **Step 4 — Real-time coverage updates after each discovery.**
 After every confirmed experience, the skill shows updated coverage numbers across all affected jobs before asking whether to continue:
 
-```
+```text
 "Great! That addresses Kubernetes for all 3 jobs.
 
 UPDATED COVERAGE:
@@ -85,12 +85,15 @@ Every confirmed experience is saved to `_discovered_experiences.md` in the batch
 {
   "experience_id": "disc-1",
   "text": "Kubernetes CI/CD for nonprofit project",
+  "context": "Side project, 2023-2024, production",
+  "scope": "GitHub Actions, 3 nonprofits, pytest, monitoring",
   "addresses_jobs": ["job-1", "job-2", "job-3"],
   "addresses_gaps": ["Kubernetes", "CI/CD"],
   "confidence_improvement": {
     "Kubernetes": { "before": 45, "after": 75 },
     "CI/CD": { "before": 58, "after": 82 }
   },
+  "integrated": true,
   "bullet_draft": "Designed and implemented Kubernetes-based CI/CD pipeline..."
 }
 ```
@@ -101,7 +104,7 @@ The `bullet_draft` field is a first-pass resume bullet the skill drafts during t
 
 When all gaps have been explored, the skill reports total coverage change and remaining gaps:
 
-```
+```text
 "Discovery complete!
 
 SUMMARY:
@@ -124,7 +127,7 @@ Remaining gaps: 5 (down from 14)
 
 After the discovery session, the skill walks through each captured experience and asks how to integrate it:
 
-```
+```text
 "EXPERIENCE 1: Kubernetes CI/CD for nonprofit project
 ├─ Addresses: Jobs 1, 2, 3
 └─ Options:
@@ -144,7 +147,7 @@ Experiences added to the library are permanently enriched with metadata: discove
 <Note>
 If a discovered experience only applies to one job despite being classified as a multi-job gap — for example, your Kubernetes work was exclusively on Azure AKS and does not translate to GKE or EKS — the skill tags it as job-specific and updates the gap status for the remaining jobs. It will then ask whether you want to keep exploring for a more broadly transferable answer:
 
-```
+```text
 "Got it — this addresses the Microsoft job (Azure AKS) but not
 Google (GKE) or AWS (EKS). I'll tag this as Microsoft-specific.
 

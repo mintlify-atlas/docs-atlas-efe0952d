@@ -1,7 +1,7 @@
 ---
 title: "Multi-Job Batch Mode: process 3–5 roles in one session"
 sidebarTitle: "Overview"
-description: "Multi-job batch mode shares experience discovery across similar roles, saving 11–27% of total processing time while delivering the same quality as single-job mode."
+description: "Multi-job batch mode consolidates discovery across similar roles, saving 11–27% of processing time with the same research depth and resume quality."
 ---
 
 Multi-job batch mode lets you apply to 3–5 similar roles in a single Claude Code session by running experience discovery once and reusing those findings across every application. Instead of answering the same branching interview questions three to five times in a row, you answer them once — and the skill intelligently distributes what it learns to each job. The result is the same research depth and resume quality you get from single-job mode, delivered faster and with a shared set of discovered experiences that keeps growing every time you run a batch.
@@ -54,7 +54,7 @@ Present all resumes together for review, with options to approve all, review ind
 
 Provide all job descriptions in a single message:
 
-```
+```text
 "I want to apply for these 3 roles:
 1. Microsoft - Principal PM (1ES): [paste JD or URL]
 2. Google Cloud - Senior TPM: [paste JD or URL]
@@ -66,12 +66,12 @@ Provide all job descriptions in a single message:
 The skill detects multi-job intent automatically when your input contains:
 
 - **Multiple URLs** — two or more job posting URLs separated by commas or newlines
-- **Explicit phrases** — "multiple jobs", "several positions", "batch of 3", "5 jobs", "batch mode"
+- **Explicit phrases** — "multiple jobs", "several positions", "batch of", "3 jobs", "5 jobs"
 - **Multiple company/role mentions** — "Microsoft PM, Google TPM, AWS PM"
 
 When multi-job intent is detected, the skill asks for confirmation before starting:
 
-```
+```text
 "I see you have multiple job applications. Would you like to use
 multi-job mode?
 
@@ -113,13 +113,13 @@ Batch state is automatically saved after every major milestone — gap analysis 
 
 To resume a paused batch:
 
-```
+```text
 "resume batch batch-2025-11-04-job-search"
 ```
 
 or simply:
 
-```
+```text
 "continue my batch"
 ```
 

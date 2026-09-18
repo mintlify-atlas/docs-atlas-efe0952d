@@ -1,7 +1,7 @@
 ---
-title: "Research Phase: building a success profile for your target role"
+title: "Research Phase: building your role success profile"
 sidebarTitle: "Research Phase"
-description: "Phase 1 researches company culture, parses the job description, and benchmarks LinkedIn profiles to build a success profile the rest of the workflow is built on."
+description: "Phase 1 parses the job description, researches company culture, and benchmarks LinkedIn profiles to build a success profile for every downstream phase."
 ---
 
 Before any content from your resume library is touched, the skill invests in understanding exactly what success looks like for the role you're targeting. Phase 1 combines structured job description analysis, live company research, and LinkedIn role benchmarking to produce a **Success Profile** — a validated document that every downstream phase uses to score, match, and frame your experience. Getting this foundation right is what separates a keyword-stuffed resume from one that speaks the hiring team's language.
@@ -54,7 +54,22 @@ Once the job description is parsed, the skill runs four targeted web searches to
 4. "{company_name} team structure engineering"
 ```
 
-The search results are then synthesized into a company context summary covering:
+The search results are synthesized using this prompt:
+
+```
+Based on these search results, summarize:
+
+1. Company mission and values
+2. Cultural priorities
+3. Business model and customer base
+4. Team structure (if available)
+5. Company stage (startup/growth/mature) and implications
+
+Search results:
+{SEARCH_RESULTS}
+```
+
+The synthesis produces a company context summary covering:
 
 - **Mission and values** — what the company publicly stands for
 - **Cultural priorities** — what behaviors and mindsets the organization rewards
